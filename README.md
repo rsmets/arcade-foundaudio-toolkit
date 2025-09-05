@@ -83,7 +83,11 @@ uv run arcade serve --reload
 # Server will be available at http://localhost:8002
 ```
 
+Follow along the Arcade.dev [documentation](https://docs.arcade.dev/home/build-tools/create-a-toolkit#connect-your-toolkit-to-the-arcade-engine) on how to port-forward your local instance for testing the tool calling within the Arcade.dev dashboard.
+
 ## 🔧 Tools Available
+
+For the sake of time and simplicity, I opted not to invest effort into more than one tool call.
 
 ### 1. Get Audio List (`get_audio_list`)
 
