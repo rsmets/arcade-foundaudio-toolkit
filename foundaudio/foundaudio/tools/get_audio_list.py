@@ -2,11 +2,12 @@ from typing import Annotated, List, Optional, Dict
 from supabase import create_client, Client
 import os
 
-from arcade_tdk import tool
+from arcade_tdk import tool, ToolContext
 
 
-@tool
+@tool(requires_secrets=["SUPABASE_ANON_KEY"])
 def get_audio_list(
+    context: ToolContext,
     limit: Annotated[Optional[int], "Number of audio files to return (default: 20, max: 100)"] = 20,
     search: Annotated[Optional[str], "Search term to filter by title or description"] = None,
     genre: Annotated[Optional[str], "Genre to filter by"] = None
@@ -34,9 +35,7 @@ def get_audio_list(
         
         # Get Supabase configuration
         supabase_url = os.getenv("SUPABASE_URL", "https://msocrbprgpaqvrtrcqpo.supabase.co")
-        supabase_key = os.getenv("SUPABASE_ANON_KEY", "sb_publishable_4L_ms4VzC-6HXYgq90P3Nw_1AGhi3Hm")
-        
-        # supabase_key will always have a value due to the default, so no need to check
+        supabase_key = context.get_secret("SUPABASE_ANON_KEY")
         
         # Create Supabase client
         supabase = create_client(supabase_url, supabase_key)
