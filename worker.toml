@@ -1,0 +1,10 @@
+[[worker]]
+
+[worker.config]
+id = "demo-worker"
+enabled = true
+timeout = 30
+retries = 3
+secret = "846378c303900477d4cce5fc94c5840c"
+[worker.local_source]
+packages = [ "./foundaudio",]
