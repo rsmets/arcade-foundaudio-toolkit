@@ -5,7 +5,7 @@ import pytest
 from arcade_core.errors import RetryableToolError, ToolExecutionError
 from arcade_tdk import ToolContext
 
-from foundaudio.tools.get_audio_list import AudioFile, get_audio_list
+from foundaudio.tools.get_audio_list import get_audio_list
 
 
 def test_get_audio_list_basic():
@@ -49,15 +49,36 @@ def test_get_audio_list_basic():
         result = get_audio_list(mock_context)
 
         # Result is now a dictionary containing audio files
-        assert isinstance(result, dict)
-        assert "audio_files" in result
-        assert isinstance(result["audio_files"], list)
-        assert len(result["audio_files"]) == 1
-        assert isinstance(result["audio_files"][0], dict)
-        assert result["audio_files"][0]["title"] == "Test Track"
-        assert result["audio_files"][0]["genres"] == ["electronic"]
-        assert result["audio_files"][0]["updated_at"] == "2024-01-01T00:00:00Z"
-        assert result["count"] == 1
+        if not isinstance(result, dict):
+            raise AssertionError(f"Expected result to be dict, got {type(result)}")
+        if "audio_files" not in result:
+            raise AssertionError("Expected 'audio_files' key in result")
+        if not isinstance(result["audio_files"], list):
+            raise AssertionError(
+                f"Expected audio_files to be list, got {type(result['audio_files'])}"
+            )
+        if len(result["audio_files"]) != 1:
+            raise AssertionError(
+                f"Expected 1 audio file, got {len(result['audio_files'])}"
+            )
+        if not isinstance(result["audio_files"][0], dict):
+            raise AssertionError(
+                f"Expected audio file to be dict, got {type(result['audio_files'][0])}"
+            )
+        if result["audio_files"][0]["title"] != "Test Track":
+            raise AssertionError(
+                f"Expected title 'Test Track', got {result['audio_files'][0]['title']}"
+            )
+        if result["audio_files"][0]["genres"] != ["electronic"]:
+            raise AssertionError(
+                f"Expected genres ['electronic'], got {result['audio_files'][0]['genres']}"
+            )
+        if result["audio_files"][0]["updated_at"] != "2024-01-01T00:00:00Z":
+            raise AssertionError(
+                f"Expected updated_at '2024-01-01T00:00:00Z', got {result['audio_files'][0]['updated_at']}"
+            )
+        if result["count"] != 1:
+            raise AssertionError(f"Expected count 1, got {result['count']}")
 
 
 def test_get_audio_list_invalid_limit():
@@ -104,11 +125,20 @@ def test_get_audio_list_no_results():
         result = get_audio_list(mock_context)
 
         # Should return empty result structure instead of None
-        assert isinstance(result, dict)
-        assert "audio_files" in result
-        assert isinstance(result["audio_files"], list)
-        assert len(result["audio_files"]) == 0
-        assert result["count"] == 0
+        if not isinstance(result, dict):
+            raise AssertionError(f"Expected result to be dict, got {type(result)}")
+        if "audio_files" not in result:
+            raise AssertionError("Expected 'audio_files' key in result")
+        if not isinstance(result["audio_files"], list):
+            raise AssertionError(
+                f"Expected audio_files to be list, got {type(result['audio_files'])}"
+            )
+        if len(result["audio_files"]) != 0:
+            raise AssertionError(
+                f"Expected 0 audio files, got {len(result['audio_files'])}"
+            )
+        if result["count"] != 0:
+            raise AssertionError(f"Expected count 0, got {result['count']}")
 
 
 def test_get_audio_list_missing_secret():
@@ -180,18 +210,42 @@ def test_get_audio_list_with_filters():
         result = get_audio_list(mock_context, limit=10, search="house", genre="house")
 
         # Verify the result
-        assert isinstance(result, dict)
-        assert "audio_files" in result
-        assert isinstance(result["audio_files"], list)
-        assert len(result["audio_files"]) == 1
-        assert isinstance(result["audio_files"][0], dict)
-        assert result["audio_files"][0]["title"] == "House Track"
-        assert result["audio_files"][0]["genres"] == ["house"]
-        assert result["audio_files"][0]["updated_at"] == "2024-01-02T00:00:00Z"
-        assert result["count"] == 1
-        assert result["limit"] == 10
-        assert result["search"] == "house"
-        assert result["genre"] == "house"
+        if not isinstance(result, dict):
+            raise AssertionError(f"Expected result to be dict, got {type(result)}")
+        if "audio_files" not in result:
+            raise AssertionError("Expected 'audio_files' key in result")
+        if not isinstance(result["audio_files"], list):
+            raise AssertionError(
+                f"Expected audio_files to be list, got {type(result['audio_files'])}"
+            )
+        if len(result["audio_files"]) != 1:
+            raise AssertionError(
+                f"Expected 1 audio file, got {len(result['audio_files'])}"
+            )
+        if not isinstance(result["audio_files"][0], dict):
+            raise AssertionError(
+                f"Expected audio file to be dict, got {type(result['audio_files'][0])}"
+            )
+        if result["audio_files"][0]["title"] != "House Track":
+            raise AssertionError(
+                f"Expected title 'House Track', got {result['audio_files'][0]['title']}"
+            )
+        if result["audio_files"][0]["genres"] != ["house"]:
+            raise AssertionError(
+                f"Expected genres ['house'], got {result['audio_files'][0]['genres']}"
+            )
+        if result["audio_files"][0]["updated_at"] != "2024-01-02T00:00:00Z":
+            raise AssertionError(
+                f"Expected updated_at '2024-01-02T00:00:00Z', got {result['audio_files'][0]['updated_at']}"
+            )
+        if result["count"] != 1:
+            raise AssertionError(f"Expected count 1, got {result['count']}")
+        if result["limit"] != 10:
+            raise AssertionError(f"Expected limit 10, got {result['limit']}")
+        if result["search"] != "house":
+            raise AssertionError(f"Expected search 'house', got {result['search']}")
+        if result["genre"] != "house":
+            raise AssertionError(f"Expected genre to be 'house', got {result['genre']}")
 
         # Verify the query methods were called with correct parameters
         query_mock.or_.assert_called_once_with(
