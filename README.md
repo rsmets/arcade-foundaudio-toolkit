@@ -105,7 +105,7 @@ result = get_audio_list(limit=5)
 result = get_audio_list(search="pool", genre="House", limit=10)
 ```
 
-**Returns:** JSON string with audio file metadata including:
+**Returns:** List of audio file dictionaries with metadata including:
 
 - ID, title, description
 - File path, duration, genres

@@ -1,26 +1,28 @@
-import pytest
-from unittest.mock import patch, Mock
 import os
+from unittest.mock import Mock, patch
 
-from foundaudio.tools.get_audio_list import get_audio_list
-from arcade_core.errors import ToolExecutionError
+import pytest
+from arcade_core.errors import RetryableToolError, ToolExecutionError
 from arcade_tdk import ToolContext
+
+from foundaudio.tools.get_audio_list import AudioFile, get_audio_list
 
 
 def test_get_audio_list_basic():
     """Test basic functionality without filters."""
-    with patch('foundaudio.tools.get_audio_list.os.getenv') as mock_getenv, \
-         patch('foundaudio.tools.get_audio_list.create_client') as mock_create_client:
-        
+    with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv, patch(
+        "foundaudio.tools.get_audio_list.create_client"
+    ) as mock_create_client:
+
         # Mock environment variables
         mock_getenv.side_effect = lambda key, default=None: {
-            'SUPABASE_URL': 'https://test.supabase.co'
+            "SUPABASE_URL": "https://test.supabase.co"
         }.get(key, default)
-        
+
         # Mock ToolContext
         mock_context = Mock(spec=ToolContext)
-        mock_context.get_secret.return_value = 'test-secret-key'
-        
+        mock_context.get_secret.return_value = "test-secret-key"
+
         # Mock Supabase client
         mock_client = mock_create_client.return_value
         mock_response = Mock()
@@ -34,32 +36,167 @@ def test_get_audio_list_basic():
                 "genres": ["electronic"],
                 "user_id": "user123",
                 "created_at": "2024-01-01T00:00:00Z",
-                "profiles": {"email": "test@example.com", "username": "testuser"}
+                "updated_at": "2024-01-01T00:00:00Z",
             }
         ]
-        
+
         query_mock = Mock()
-        query_mock.order.return_value.limit.return_value.execute.return_value = mock_response
+        query_mock.order.return_value.limit.return_value.execute.return_value = (
+            mock_response
+        )
         mock_client.from_.return_value.select.return_value = query_mock
 
         result = get_audio_list(mock_context)
 
-        # Result is now a JSON string
-        import json
-        parsed_result = json.loads(result)
-        assert len(parsed_result) == 1
-        assert parsed_result[0]["title"] == "Test Track"
-        assert parsed_result[0]["genres"] == ["electronic"]
+        # Result is now a dictionary containing audio files
+        assert isinstance(result, dict)
+        assert "audio_files" in result
+        assert isinstance(result["audio_files"], list)
+        assert len(result["audio_files"]) == 1
+        assert isinstance(result["audio_files"][0], dict)
+        assert result["audio_files"][0]["title"] == "Test Track"
+        assert result["audio_files"][0]["genres"] == ["electronic"]
+        assert result["audio_files"][0]["updated_at"] == "2024-01-01T00:00:00Z"
+        assert result["count"] == 1
 
 
 def test_get_audio_list_invalid_limit():
-    """Test validation of limit parameter."""
+    """Test validation of limit parameter using RetryableToolError."""
     # Mock ToolContext for validation tests
     mock_context = Mock(spec=ToolContext)
-    mock_context.get_secret.return_value = 'test-secret-key'
-    
-    with pytest.raises(ToolExecutionError, match="Error in execution of GetAudioList"):
+    mock_context.get_secret.return_value = "test-secret-key"
+
+    # Test limit too low
+    with pytest.raises(RetryableToolError, match="Invalid limit parameter"):
         get_audio_list(mock_context, limit=0)
 
-    with pytest.raises(ToolExecutionError, match="Error in execution of GetAudioList"):
+    # Test limit too high
+    with pytest.raises(RetryableToolError, match="Invalid limit parameter"):
         get_audio_list(mock_context, limit=101)
+
+
+def test_get_audio_list_no_results():
+    """Test when no audio files are found."""
+    with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv, patch(
+        "foundaudio.tools.get_audio_list.create_client"
+    ) as mock_create_client:
+
+        # Mock environment variables
+        mock_getenv.side_effect = lambda key, default=None: {
+            "SUPABASE_URL": "https://test.supabase.co"
+        }.get(key, default)
+
+        # Mock ToolContext
+        mock_context = Mock(spec=ToolContext)
+        mock_context.get_secret.return_value = "test-secret-key"
+
+        # Mock Supabase client with no results
+        mock_client = mock_create_client.return_value
+        mock_response = Mock()
+        mock_response.data = None  # No results
+
+        query_mock = Mock()
+        query_mock.order.return_value.limit.return_value.execute.return_value = (
+            mock_response
+        )
+        mock_client.from_.return_value.select.return_value = query_mock
+
+        result = get_audio_list(mock_context)
+
+        # Should return empty result structure instead of None
+        assert isinstance(result, dict)
+        assert "audio_files" in result
+        assert isinstance(result["audio_files"], list)
+        assert len(result["audio_files"]) == 0
+        assert result["count"] == 0
+
+
+def test_get_audio_list_missing_secret():
+    """Test error handling when secret is missing."""
+    with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv:
+
+        # Mock environment variables
+        mock_getenv.side_effect = lambda key, default=None: {
+            "SUPABASE_URL": "https://test.supabase.co"
+        }.get(key, default)
+
+        # Mock ToolContext with missing secret
+        mock_context = Mock(spec=ToolContext)
+        mock_context.get_secret.return_value = None  # Missing secret
+
+        with pytest.raises(
+            ToolExecutionError, match="Error in execution of GetAudioList"
+        ):
+            get_audio_list(mock_context)
+
+
+def test_get_audio_list_with_filters():
+    """Test functionality with search and genre filters."""
+    with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv, patch(
+        "foundaudio.tools.get_audio_list.create_client"
+    ) as mock_create_client:
+
+        # Mock environment variables
+        mock_getenv.side_effect = lambda key, default=None: {
+            "SUPABASE_URL": "https://test.supabase.co"
+        }.get(key, default)
+
+        # Mock ToolContext
+        mock_context = Mock(spec=ToolContext)
+        mock_context.get_secret.return_value = "test-secret-key"
+
+        # Mock Supabase client
+        mock_client = mock_create_client.return_value
+        mock_response = Mock()
+        mock_response.data = [
+            {
+                "id": "456",
+                "title": "House Track",
+                "description": "A house music track",
+                "file_path": "audio/house.mp3",
+                "duration": 240.0,
+                "genres": ["house"],
+                "user_id": "user456",
+                "created_at": "2024-01-02T00:00:00Z",
+                "updated_at": "2024-01-02T00:00:00Z",
+            }
+        ]
+
+        # Create a more detailed mock for chained method calls
+        query_mock = Mock()
+        or_mock = Mock()
+        contains_mock = Mock()
+        order_mock = Mock()
+        limit_mock = Mock()
+
+        # Set up the chain: from_ -> select -> or_ -> contains -> order -> limit -> execute
+        mock_client.from_.return_value.select.return_value = query_mock
+        query_mock.or_.return_value = or_mock
+        or_mock.contains.return_value = contains_mock
+        contains_mock.order.return_value = order_mock
+        order_mock.limit.return_value = limit_mock
+        limit_mock.execute.return_value = mock_response
+
+        result = get_audio_list(mock_context, limit=10, search="house", genre="house")
+
+        # Verify the result
+        assert isinstance(result, dict)
+        assert "audio_files" in result
+        assert isinstance(result["audio_files"], list)
+        assert len(result["audio_files"]) == 1
+        assert isinstance(result["audio_files"][0], dict)
+        assert result["audio_files"][0]["title"] == "House Track"
+        assert result["audio_files"][0]["genres"] == ["house"]
+        assert result["audio_files"][0]["updated_at"] == "2024-01-02T00:00:00Z"
+        assert result["count"] == 1
+        assert result["limit"] == 10
+        assert result["search"] == "house"
+        assert result["genre"] == "house"
+
+        # Verify the query methods were called with correct parameters
+        query_mock.or_.assert_called_once_with(
+            "title.ilike.%house%,description.ilike.%house%"
+        )
+        or_mock.contains.assert_called_once_with("genres", ["house"])
+        contains_mock.order.assert_called_once_with("created_at", desc=True)
+        order_mock.limit.assert_called_once_with(10)
