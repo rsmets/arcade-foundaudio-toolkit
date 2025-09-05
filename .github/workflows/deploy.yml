@@ -74,4 +74,4 @@ jobs:
         run: |
           cd foundaudio
           echo "Deployment completed for tag/release: ${{ github.ref_name }}"
-          uv run arcade deploy status
+          uv run arcade worker list
