@@ -1,6 +1,6 @@
 # Found Audio Toolkit - Arcade.dev Example
 
-> An example [Arcade.dev](https://arcade.dev) toolkit demonstrating professional software development practices with a simple audio database API.
+> An example [Arcade.dev](https://arcade.dev) toolkit demonstrating professional software development practices with a simple audio database API as requested in the take-home [assignment](Arcade Engineering Interview Project.pdf).
 
 ## 🎯 Project Goals
 
