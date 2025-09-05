@@ -48,8 +48,8 @@ jobs:
           cloud:
             api:
               key: $ARCADE_API_KEY
-          user:
-            email: rayjsmets@gmail.com
+            user:
+                email: rayjsmets@gmail.com
           EOF
 
           # Temporarily move .venv to avoid packaging issues
@@ -81,8 +81,8 @@ jobs:
           cloud:
             api:
               key: $ARCADE_API_KEY
-          user:
-            email: rayjsmets@gmail.com
+            user:
+                email: rayjsmets@gmail.com
           EOF
 
           uv run arcade worker list
