@@ -78,4 +78,4 @@ jobs:
           cd foundaudio
           echo "Deployment completed for tag/release: ${{ github.ref_name }}"
           echo "Fetching worker list..."
-          uv run arcade worker list --debug
+          uv run arcade worker list
