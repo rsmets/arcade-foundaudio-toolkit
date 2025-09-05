@@ -5,7 +5,9 @@ from foundaudio.tools.hello import say_hello
 
 
 def test_hello() -> None:
-    assert say_hello("developer") == "Hello, developer!"
+    result = say_hello("developer")
+    if result != "Hello, developer!":
+        raise AssertionError(f"Expected 'Hello, developer!', got '{result}'")
 
 
 def test_hello_raises_error() -> None:
