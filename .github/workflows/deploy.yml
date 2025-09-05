@@ -64,14 +64,7 @@ jobs:
 
           # Deploy from root directory using the moved venv
           echo "Starting deployment with debug output..."
-          set -x  # Enable command tracing for deploy
-          ./.venv-temp/bin/python -m arcade_cli.main deploy --deployment-file worker.toml --debug 2>&1 | tee deploy_output.log
-          DEPLOY_EXIT_CODE=$?
-          set +x  # Disable command tracing
-          
-          echo "Deploy command completed with exit code: $DEPLOY_EXIT_CODE"
-          echo "--- Deploy Output ---"
-          cat deploy_output.log || echo "No deploy output file found"
+          ./.venv-temp/bin/python -m arcade_cli.main deploy --deployment-file worker.toml --debug
 
           # Restore .venv directory
           cd foundaudio
@@ -85,11 +78,4 @@ jobs:
           cd foundaudio
           echo "Deployment completed for tag/release: ${{ github.ref_name }}"
           echo "Fetching worker list..."
-          set -x  # Enable command tracing for worker list
-          uv run arcade worker list --debug 2>&1 | tee worker_list_output.log
-          WORKER_LIST_EXIT_CODE=$?
-          set +x  # Disable command tracing
-          
-          echo "Worker list command completed with exit code: $WORKER_LIST_EXIT_CODE"
-          echo "--- Worker List Output ---"
-          cat worker_list_output.log || echo "No worker list output file found"
+          uv run arcade worker list
