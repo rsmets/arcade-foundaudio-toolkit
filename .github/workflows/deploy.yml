@@ -38,7 +38,7 @@ jobs:
           cd foundaudio
           make install
 
-      - name: Deploy to Arcade
+      - name: Setup Arcade credentials
         env:
           ARCADE_API_KEY: ${{ secrets.ArcadeApiKey }}
         run: |
@@ -49,9 +49,11 @@ jobs:
             api:
               key: $ARCADE_API_KEY
             user:
-                email: rayjsmets@gmail.com
+              email: rayjsmets@gmail.com
           EOF
 
+      - name: Deploy to Arcade
+        run: |
           # Temporarily move .venv to avoid packaging issues
           cd foundaudio
           if [ -d ".venv" ]; then
@@ -69,20 +71,7 @@ jobs:
           fi
 
       - name: Get deployment info
-        env:
-          ARCADE_API_KEY: ${{ secrets.ArcadeApiKey }}
         run: |
           cd foundaudio
           echo "Deployment completed for tag/release: ${{ github.ref_name }}"
-
-          # Create arcade credentials directory and file for API key auth
-          mkdir -p ~/.arcade
-          cat > ~/.arcade/credentials.yaml << EOF
-          cloud:
-            api:
-              key: $ARCADE_API_KEY
-            user:
-                email: rayjsmets@gmail.com
-          EOF
-
           uv run arcade worker list
