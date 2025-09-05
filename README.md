@@ -218,7 +218,7 @@ trunk fmt
 
 ## 🚀 Production Deployment
 
-### Using Arcade Deploy
+### Manual Deployment
 
 ```bash
 # Deploy to Arcade's managed infrastructure
@@ -227,6 +227,32 @@ uv run arcade deploy
 # Check deployment status
 uv run arcade deploy status
 ```
+
+### Automated Deployment
+
+The project includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) that automatically deploys to Arcade when:
+
+- **Semver tags** are pushed (e.g., `v1.0.0`, `v2.1.3`, `v1.0.0-beta.1`)
+- **GitHub releases** are published
+
+#### Setup Requirements
+
+1. **Add Repository Secret**: In your GitHub repository, go to Settings → Secrets and variables → Actions, and add:
+   - **Name**: `ArcadeApiKey`
+   - **Value**: Your Arcade API key
+
+2. **Create a Release**:
+
+   ```bash
+   # Create and push a semver tag
+   git tag v0.1.0
+   git push origin v0.1.0
+
+   # Or create a GitHub release
+   gh release create v0.1.0
+   ```
+
+The workflow will automatically run `arcade deploy` and provide deployment status information.
 
 See [Arcade's deployment documentation](https://docs.arcade.dev/home/serve-tools/arcade-deploy) for comprehensive deployment options including Docker, Modal, and other hosting platforms.
 
@@ -276,7 +302,7 @@ With the solid foundation established, future enhancements could include:
 - **User Auth** - Add tools that require Found Audio user authentication, eg post comments and like audio files.
 - **Caching Layer** - To prevent having to call the external API all the time
 - **Monitoring** - Metrics and observability.
-- **CI Trunk-Based Released Job** - setup a CI job to trigger when a semver Github Release or git tag is created and run the `arcade deploy` command.
+- **Enhanced Monitoring** - Add deployment success/failure notifications and monitoring dashboards.
 
 ## 📄 License
 
