@@ -42,7 +42,6 @@ jobs:
         env:
           ARCADE_API_KEY: ${{ secrets.ArcadeApiKey }}
         run: |
-          cd foundaudio
           # Create arcade credentials directory and file for API key auth
           mkdir -p ~/.arcade
           cat > ~/.arcade/credentials.yaml << EOF
@@ -54,14 +53,17 @@ jobs:
           EOF
 
           # Temporarily move .venv to avoid packaging issues
+          cd foundaudio
           if [ -d ".venv" ]; then
             mv .venv ../.venv-temp
           fi
+          cd ..
 
-          # Deploy without .venv directory
-          uv run --python ../.venv-temp/bin/python arcade deploy --deployment-file ../worker.toml
+          # Deploy from root directory using the moved venv
+          ./.venv-temp/bin/python -m arcade_cli.main deploy --deployment-file worker.toml
 
           # Restore .venv directory
+          cd foundaudio
           if [ -d "../.venv-temp" ]; then
             mv ../.venv-temp .venv
           fi
