@@ -257,6 +257,15 @@ This project exemplifies my approach to software development:
 - Evaluation capabilities
 - CI/CD set with proper gitops practices enforced
 
+## 🏆 Outcome
+
+I feel all of the [project goals](#-project-goals) were achieved. I was able to successfully deploy my worker to Arcade.dev using Cloudflare and test via the dashboard tool calling interface.
+
+Worker URI: https://e58rbgi8n1svd5mpt8rxtr316-1972021761134002131.server.arcade.dev
+Secret: <default suggestion>
+
+_It is unclear to me the best way to provide the information necessary for others to interface with this toolkit... the [deploy documentation](https://docs.arcade.dev/home/serve-tools/arcade-deploy) does not include information on this._
+
 ## 📈 Next Steps
 
 With the solid foundation established, future enhancements could include:
