@@ -34,7 +34,7 @@ I really wanted to make a complex toolkit that would require OAuth to interface 
 
 - **[Trunk](https://trunk.io/)** - [Metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce standards and best practices. It should just work thanks to the [Launcher](https://docs.trunk.io/code-quality/setup-and-installation/initialize-trunk#the-trunk-launcher) however, it might require a separate install (I was not able to verify; I have it globally on my machine)
 - **[GitHub Actions](https://docs.github.com/en/actions)** - Continuous integration
-- **[Zed](https://zed.dev/)** and \*\*[Cursor](https://cursor.com/agents)\*\* text editors were used with a variety of foundation models to assist in authoring this toolkit
+- **[Zed](https://zed.dev/)** and **[Cursor](https://cursor.com/agents)** text editors were used with a variety of foundation models to assist in authoring this toolkit
 
 ## 🏗️ File System Layout
 
