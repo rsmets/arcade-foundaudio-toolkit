@@ -263,12 +263,11 @@ This project exemplifies my approach to software development:
 With the solid foundation established, future enhancements could include:
 
 - **Evals** - Unfortunatley, upon running `arcade eval`, I was consistently met with [errors](https://github.com/rsmets/arcade-foundaudio-toolkit/issues/9). _Note, I left say_hello tool in the project to have a sansity check baseline... even that eval was not functioning._
-- **Leverage other Toolkits** - Have an input, eg Gmail, which dictates which audio file to suggest.
+- **Multi-tenancy** - User-specific data isolation (would require interfacing with an API in an authenticated state, ie with OAuth)
 - **Advanced Search** - Fuzzy matching, semantic search
 - **Caching Layer** - To prevent having to call external API all the time
 - **Rate Limiting** - API quota management
 - **Monitoring** - Metrics and observability.
-- **Multi-tenancy** - User-specific data isolation (would be required if going the additional OAuth toolkit route)
 
 ## 📄 License
 
