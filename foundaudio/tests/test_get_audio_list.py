@@ -40,9 +40,12 @@ def test_get_audio_list_basic():
 
         result = get_audio_list()
 
-        assert len(result) == 1
-        assert result[0]["title"] == "Test Track"
-        assert result[0]["genres"] == ["electronic"]
+        # Result is now a JSON string
+        import json
+        parsed_result = json.loads(result)
+        assert len(parsed_result) == 1
+        assert parsed_result[0]["title"] == "Test Track"
+        assert parsed_result[0]["genres"] == ["electronic"]
 
 
 def test_get_audio_list_invalid_limit():

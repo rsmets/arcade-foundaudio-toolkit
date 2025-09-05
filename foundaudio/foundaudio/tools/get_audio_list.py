@@ -1,4 +1,4 @@
-from typing import Annotated, List, Optional
+from typing import Annotated, List, Optional, Dict
 from supabase import create_client, Client
 import os
 
@@ -10,7 +10,7 @@ def get_audio_list(
     limit: Annotated[Optional[int], "Number of audio files to return (default: 20, max: 100)"] = 20,
     search: Annotated[Optional[str], "Search term to filter by title or description"] = None,
     genre: Annotated[Optional[str], "Genre to filter by"] = None
-) -> List[dict]:
+) -> str:
     """Get a list of audio files from the Found Audio database.
     
     This tool retrieves audio files with optional filtering by search term or genre.
@@ -46,11 +46,11 @@ def get_audio_list(
         query = supabase.from_("audio_files").select(select_fields)
         
         # Apply search filter
-        if search:
+        if search and search.strip():
             query = query.or_(f"title.ilike.%{search}%,description.ilike.%{search}%")
         
         # Apply genre filter
-        if genre:
+        if genre and genre.strip():
             query = query.contains("genres", [genre])
         
         # Apply ordering and limit
@@ -60,9 +60,11 @@ def get_audio_list(
         response = query.execute()
         
         if response.data is None:
-            return []
+            return "No audio files found."
         
-        return response.data
+        # Format the results as a readable string
+        import json
+        return json.dumps(response.data, indent=2)
         
     except Exception as e:
         raise RuntimeError(f"Error getting audio list: {str(e)}")
