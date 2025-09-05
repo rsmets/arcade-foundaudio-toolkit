@@ -1,5 +1,12 @@
 name: Toolkit Tests
 
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+  actions: read
+  statuses: write
+
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
