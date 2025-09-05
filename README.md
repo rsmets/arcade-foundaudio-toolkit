@@ -271,4 +271,4 @@ With the solid foundation established, future enhancements could include:
 
 ## 📄 License
 
-MIT. This project is for demonstration purposes.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) file for details.
