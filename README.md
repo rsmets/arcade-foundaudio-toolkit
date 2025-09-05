@@ -276,6 +276,7 @@ With the solid foundation established, future enhancements could include:
 - **User Auth** - Add tools that require Found Audio user authentication, eg post comments and like audio files.
 - **Caching Layer** - To prevent having to call the external API all the time
 - **Monitoring** - Metrics and observability.
+- **CI Trunk-Based Released Job** - setup a CI job to trigger when a semver Github Release or git tag is created and run the `arcade deploy` command.
 
 ## 📄 License
 
