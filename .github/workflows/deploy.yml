@@ -43,6 +43,9 @@ jobs:
           ARCADE_API_KEY: ${{ secrets.ArcadeApiKey }}
         run: |
           cd foundaudio
+          # Create arcade credentials directory and file for API key auth
+          mkdir -p ~/.arcade
+          echo "api_key: $ARCADE_API_KEY" > ~/.arcade/credentials.yaml
           uv run arcade deploy --deployment-file ../worker.toml
 
       - name: Get deployment info
