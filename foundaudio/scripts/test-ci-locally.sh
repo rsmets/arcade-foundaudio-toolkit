@@ -7,8 +7,8 @@ set -e
 
 echo "🧪 Testing CI workflow locally..."
 
-# Set environment variables
-export SUPABASE_ANON_KEY="test-key-for-local-ci"
+# Set environment variables; Note that this is a PUBLIC Supabase key
+export SUPABASE_ANON_KEY="sb_publishable_4L_ms4VzC-6HXYgq90P3Nw_1AGhi3Hm"
 
 # Install dependencies
 echo "📦 Installing dependencies..."

@@ -27,7 +27,7 @@ jobs:
 
     - name: Set up test environment
       run: |
-        echo "SUPABASE_ANON_KEY=test-key-for-pr-checks" >> $GITHUB_ENV
+        echo "SUPABASE_ANON_KEY=sb_publishable_4L_ms4VzC-6HXYgq90P3Nw_1AGhi3Hm" >> $GITHUB_ENV
 
     - name: Run pre-commit hooks
       run: |
