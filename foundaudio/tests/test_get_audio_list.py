@@ -7,25 +7,35 @@ from arcade_tdk import ToolContext
 
 from foundaudio.tools.get_audio_list import get_audio_list
 
+# =============================================================================
+# NORMAL OPERATION TESTS
+# These tests verify the tool works correctly under normal conditions
+# =============================================================================
+
 
 def test_get_audio_list_basic():
-    """Test basic functionality without filters."""
+    """NORMAL OPERATION: Test basic functionality without filters.
+
+    This test verifies that the tool can successfully retrieve audio files
+    from the database without any search or genre filters applied.
+    """
     with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv, patch(
         "foundaudio.tools.get_audio_list.create_client"
     ) as mock_create_client:
 
-        # Mock environment variables
+        # SETUP: Mock environment variables for Supabase configuration
         mock_getenv.side_effect = lambda key, default=None: {
             "SUPABASE_URL": "https://test.supabase.co"
         }.get(key, default)
 
-        # Mock ToolContext
+        # SETUP: Mock ToolContext with valid secret
         mock_context = Mock(spec=ToolContext)
         mock_context.get_secret.return_value = "test-secret-key"
 
-        # Mock Supabase client
+        # SETUP: Mock Supabase client and database response
         mock_client = mock_create_client.return_value
         mock_response = Mock()
+        # Simulate database returning one audio file record
         mock_response.data = [
             {
                 "id": "123",
@@ -40,19 +50,24 @@ def test_get_audio_list_basic():
             }
         ]
 
+        # SETUP: Mock the Supabase query chain (from -> select -> order -> limit -> execute)
         query_mock = Mock()
         query_mock.order.return_value.limit.return_value.execute.return_value = (
             mock_response
         )
         mock_client.from_.return_value.select.return_value = query_mock
 
+        # EXECUTE: Call the function under test
         result = get_audio_list(mock_context)
 
-        # Result is now a dictionary containing audio files
+        # VERIFY: Check that result has correct structure and data
+        # Verify return type is dictionary
         if not isinstance(result, dict):
             raise AssertionError(f"Expected result to be dict, got {type(result)}")
         if "audio_files" not in result:
             raise AssertionError("Expected 'audio_files' key in result")
+
+        # Verify audio_files is a list with expected count
         if not isinstance(result["audio_files"], list):
             raise AssertionError(
                 f"Expected audio_files to be list, got {type(result['audio_files'])}"
@@ -61,6 +76,8 @@ def test_get_audio_list_basic():
             raise AssertionError(
                 f"Expected 1 audio file, got {len(result['audio_files'])}"
             )
+
+        # Verify individual audio file structure and content
         if not isinstance(result["audio_files"][0], dict):
             raise AssertionError(
                 f"Expected audio file to be dict, got {type(result['audio_files'][0])}"
@@ -77,58 +94,83 @@ def test_get_audio_list_basic():
             raise AssertionError(
                 f"Expected updated_at '2024-01-01T00:00:00Z', got {result['audio_files'][0]['updated_at']}"
             )
+
+        # Verify metadata fields
         if result["count"] != 1:
             raise AssertionError(f"Expected count 1, got {result['count']}")
 
 
+# =============================================================================
+# INPUT VALIDATION TESTS
+# These tests verify that invalid inputs are properly validated and rejected
+# =============================================================================
+
+
 def test_get_audio_list_invalid_limit():
-    """Test validation of limit parameter using RetryableToolError."""
-    # Mock ToolContext for validation tests
+    """INPUT VALIDATION: Test validation of limit parameter using RetryableToolError.
+
+    This test verifies that the tool properly validates the limit parameter
+    and raises RetryableToolError for values outside the valid range (1-100).
+    RetryableToolError indicates the user can retry with corrected input.
+    """
+    # SETUP: Mock ToolContext for validation tests
     mock_context = Mock(spec=ToolContext)
     mock_context.get_secret.return_value = "test-secret-key"
 
-    # Test limit too low
+    # TEST: Verify limit parameter validation - too low (boundary test)
+    # Should raise RetryableToolError because user can fix by providing valid limit
     with pytest.raises(RetryableToolError, match="Invalid limit parameter"):
         get_audio_list(mock_context, limit=0)
 
-    # Test limit too high
+    # TEST: Verify limit parameter validation - too high (boundary test)
+    # Should raise RetryableToolError because user can fix by providing valid limit
     with pytest.raises(RetryableToolError, match="Invalid limit parameter"):
         get_audio_list(mock_context, limit=101)
 
 
 def test_get_audio_list_no_results():
-    """Test when no audio files are found."""
+    """NORMAL OPERATION: Test when no audio files are found.
+
+    This test verifies that the tool gracefully handles the case where
+    the database query returns no results, returning an empty list
+    rather than failing or returning None.
+    """
     with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv, patch(
         "foundaudio.tools.get_audio_list.create_client"
     ) as mock_create_client:
 
-        # Mock environment variables
+        # SETUP: Mock environment variables for Supabase configuration
         mock_getenv.side_effect = lambda key, default=None: {
             "SUPABASE_URL": "https://test.supabase.co"
         }.get(key, default)
 
-        # Mock ToolContext
+        # SETUP: Mock ToolContext with valid secret
         mock_context = Mock(spec=ToolContext)
         mock_context.get_secret.return_value = "test-secret-key"
 
-        # Mock Supabase client with no results
+        # SETUP: Mock Supabase client with no results
         mock_client = mock_create_client.return_value
         mock_response = Mock()
-        mock_response.data = None  # No results
+        mock_response.data = None  # Simulate database returning no results
 
+        # SETUP: Mock the Supabase query chain
         query_mock = Mock()
         query_mock.order.return_value.limit.return_value.execute.return_value = (
             mock_response
         )
         mock_client.from_.return_value.select.return_value = query_mock
 
+        # EXECUTE: Call the function under test
         result = get_audio_list(mock_context)
 
-        # Should return empty result structure instead of None
+        # VERIFY: Should return empty result structure instead of None
+        # Verify return type is dictionary
         if not isinstance(result, dict):
             raise AssertionError(f"Expected result to be dict, got {type(result)}")
         if "audio_files" not in result:
             raise AssertionError("Expected 'audio_files' key in result")
+
+        # Verify empty results are handled correctly
         if not isinstance(result["audio_files"], list):
             raise AssertionError(
                 f"Expected audio_files to be list, got {type(result['audio_files'])}"
@@ -141,19 +183,32 @@ def test_get_audio_list_no_results():
             raise AssertionError(f"Expected count 0, got {result['count']}")
 
 
+# =============================================================================
+# ERROR HANDLING TESTS
+# These tests verify proper error handling for system/configuration issues
+# =============================================================================
+
+
 def test_get_audio_list_missing_secret():
-    """Test error handling when secret is missing."""
+    """ERROR HANDLING: Test error handling when secret is missing.
+
+    This test verifies that the tool properly handles missing configuration
+    (SUPABASE_ANON_KEY secret) and raises ToolExecutionError for system issues
+    that cannot be resolved by the user retrying with different input.
+    """
     with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv:
 
-        # Mock environment variables
+        # SETUP: Mock environment variables for Supabase configuration
         mock_getenv.side_effect = lambda key, default=None: {
             "SUPABASE_URL": "https://test.supabase.co"
         }.get(key, default)
 
-        # Mock ToolContext with missing secret
+        # SETUP: Mock ToolContext with missing secret (system configuration issue)
         mock_context = Mock(spec=ToolContext)
-        mock_context.get_secret.return_value = None  # Missing secret
+        mock_context.get_secret.return_value = None  # Simulate missing secret
 
+        # TEST: Verify that missing secret raises ToolExecutionError (not retryable)
+        # This is a system/configuration error that user cannot fix by changing input
         with pytest.raises(
             ToolExecutionError, match="Error in execution of GetAudioList"
         ):
@@ -161,23 +216,29 @@ def test_get_audio_list_missing_secret():
 
 
 def test_get_audio_list_with_filters():
-    """Test functionality with search and genre filters."""
+    """NORMAL OPERATION: Test functionality with search and genre filters.
+
+    This test verifies that the tool correctly applies search and genre
+    filters to the database query and returns properly filtered results.
+    It also tests that the returned metadata includes the applied filters.
+    """
     with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv, patch(
         "foundaudio.tools.get_audio_list.create_client"
     ) as mock_create_client:
 
-        # Mock environment variables
+        # SETUP: Mock environment variables for Supabase configuration
         mock_getenv.side_effect = lambda key, default=None: {
             "SUPABASE_URL": "https://test.supabase.co"
         }.get(key, default)
 
-        # Mock ToolContext
+        # SETUP: Mock ToolContext with valid secret
         mock_context = Mock(spec=ToolContext)
         mock_context.get_secret.return_value = "test-secret-key"
 
-        # Mock Supabase client
+        # SETUP: Mock Supabase client and filtered response
         mock_client = mock_create_client.return_value
         mock_response = Mock()
+        # Simulate database returning filtered results matching search and genre
         mock_response.data = [
             {
                 "id": "456",
@@ -192,14 +253,14 @@ def test_get_audio_list_with_filters():
             }
         ]
 
-        # Create a more detailed mock for chained method calls
+        # SETUP: Create detailed mocks for chained method calls with filters
         query_mock = Mock()
         or_mock = Mock()
         contains_mock = Mock()
         order_mock = Mock()
         limit_mock = Mock()
 
-        # Set up the chain: from_ -> select -> or_ -> contains -> order -> limit -> execute
+        # SETUP: Mock the complex query chain with filters: from_ -> select -> or_ -> contains -> order -> limit -> execute
         mock_client.from_.return_value.select.return_value = query_mock
         query_mock.or_.return_value = or_mock
         or_mock.contains.return_value = contains_mock
@@ -207,13 +268,17 @@ def test_get_audio_list_with_filters():
         order_mock.limit.return_value = limit_mock
         limit_mock.execute.return_value = mock_response
 
+        # EXECUTE: Call the function under test with search and genre filters
         result = get_audio_list(mock_context, limit=10, search="house", genre="house")
 
-        # Verify the result
+        # VERIFY: Check that result has correct structure and filtered data
+        # Verify return type is dictionary
         if not isinstance(result, dict):
             raise AssertionError(f"Expected result to be dict, got {type(result)}")
         if "audio_files" not in result:
             raise AssertionError("Expected 'audio_files' key in result")
+
+        # Verify filtered results structure
         if not isinstance(result["audio_files"], list):
             raise AssertionError(
                 f"Expected audio_files to be list, got {type(result['audio_files'])}"
@@ -222,6 +287,8 @@ def test_get_audio_list_with_filters():
             raise AssertionError(
                 f"Expected 1 audio file, got {len(result['audio_files'])}"
             )
+
+        # Verify individual audio file content matches filters
         if not isinstance(result["audio_files"][0], dict):
             raise AssertionError(
                 f"Expected audio file to be dict, got {type(result['audio_files'][0])}"
@@ -238,6 +305,8 @@ def test_get_audio_list_with_filters():
             raise AssertionError(
                 f"Expected updated_at '2024-01-02T00:00:00Z', got {result['audio_files'][0]['updated_at']}"
             )
+
+        # Verify metadata fields include applied filters
         if result["count"] != 1:
             raise AssertionError(f"Expected count 1, got {result['count']}")
         if result["limit"] != 10:
@@ -247,7 +316,7 @@ def test_get_audio_list_with_filters():
         if result["genre"] != "house":
             raise AssertionError(f"Expected genre to be 'house', got {result['genre']}")
 
-        # Verify the query methods were called with correct parameters
+        # VERIFY: Check that the correct query methods were called with expected parameters
         query_mock.or_.assert_called_once_with(
             "title.ilike.%house%,description.ilike.%house%"
         )

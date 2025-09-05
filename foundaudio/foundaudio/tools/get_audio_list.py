@@ -21,8 +21,8 @@ class AudioFile(BaseModel):
     updated_at: str
 
 
-# NOTE: the supabase key is actually not a secret!
-# It is meant to be used in the browser and thus is public. The secret context was used as a placeholder to show how to properly handle secrets in the toolkit.
+# NOTE: the Supabase [anon key](https://supabase.com/docs/guides/api/api-keys#anon-and-publishable-keys) is actually not a secret!
+# The secret ToolContext was used as a placeholder to show how to properly handle secrets in the toolkit.
 @tool(requires_secrets=["SUPABASE_ANON_KEY"])
 def get_audio_list(
     context: ToolContext,
