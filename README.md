@@ -4,13 +4,12 @@
 
 ## 🎯 Project Goals
 
-This project demonstrates how I approach software development by building a **production-ready toolkit** with professional standards:
+This project demonstrates how I approach software development by building a [toolkit](https://docs.arcade.dev/home/build-tools/create-a-toolkit) with professional software development standards practices:
 
 1. **🏗️ Foundation First**: Establish solid development practices before adding complex features
 2. **🧪 Test-Driven**: Comprehensive test coverage with proper mocking and validation
 3. **🔧 Tooling**: Modern Python tooling (uv, pytest, linting, CI/CD)
-4. **📚 Documentation**: Clear, comprehensive documentation with examples
-5. **🚀 Deployment**: Ready for production with proper secret management
+4. **📚 Documentation**: Verbose inline comments
 
 The **Found Audio API** was chosen specifically for its simplicity - allowing focus on development practices rather than complex business logic.
 
@@ -29,8 +28,9 @@ The **Found Audio API** was chosen specifically for its simplicity - allowing fo
 
 ### Development Tools
 
-- **Trunk** - Local linting
+- **Trunk** - [Metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce standards and best practices
 - **GitHub Actions** - Continuous integration
+- **Zed** and **Cursor** text editors were used to assist in authoring this toolkit
 
 ## 🏗️ Architecture
 
@@ -74,19 +74,6 @@ source .venv/bin/activate  # Linux/Mac
 .venv\Scripts\activate     # Windows
 ```
 
-### Running Tests
-
-```bash
-# Run all tests
-uv run pytest
-
-# Run with coverage
-uv run pytest --cov=foundaudio
-
-# Run specific test file
-uv run pytest tests/test_get_audio_list.py -v
-```
-
 ### Starting the Development Server
 
 ```bash
@@ -124,13 +111,9 @@ result = get_audio_list(search="pool", genre="House", limit=10)
 - File path, duration, genres
 - User information and timestamps
 
-### 2. Hello Tool (`say_hello`)
-
-Simple example tool demonstrating basic Arcade functionality.
-
 ## 🔐 Secret Management
 
-This toolkit demonstrates [Arcade's secret management](https://docs.arcade.dev/home/build-tools/create-a-tool-with-secrets) system:
+This toolkit demonstrates [Arcade's secret management](https://docs.arcade.dev/home/build-tools/create-a-tool-with-secrets) system via [ToolContext](https://docs.arcade.dev/home/build-tools/tool-context):
 
 ```python
 @tool(requires_secrets=["SUPABASE_ANON_KEY"])
@@ -140,16 +123,25 @@ def get_audio_list(context: ToolContext, ...):
 
 **Note:** The Supabase anonymous key is actually public (designed for browser use), but this demonstrates proper secret handling patterns for truly sensitive credentials.
 
-### Setting Up Secrets
-
-1. Go to **Auth > Secrets** in your [Arcade Dashboard](https://dashboard.arcade.dev)
-2. Click **"+ Add Secret"**
-3. Enter:
-   - **ID**: `SUPABASE_ANON_KEY`
-   - **Secret Value**: Your Supabase anonymous key
-   - **Description**: "Supabase anonymous key for Found Audio database"
+_Please reference the Arcade.dev documentation for information on how to set the Tool secrets_
 
 ## 🧪 Testing Strategy
+
+### Running Tests
+
+```bash
+# Run all tests
+make test
+
+# Run with coverage
+uv run pytest --cov=foundaudio
+
+# Run specific test file
+uv run pytest tests/test_get_audio_list.py -v
+
+# Test specific functionality
+uv run pytest tests/test_get_audio_list.py::test_get_audio_list_basic -v
+```
 
 ### Test Categories
 
@@ -168,19 +160,6 @@ with patch('foundaudio.tools.get_audio_list.create_client') as mock_client:
 
     result = get_audio_list(mock_context, limit=5)
     assert isinstance(result, str)
-```
-
-### Running Specific Test Suites
-
-```bash
-# Test specific functionality
-uv run pytest tests/test_get_audio_list.py::test_get_audio_list_basic -v
-
-# Test with verbose output
-uv run pytest -v
-
-# Test with coverage report
-uv run pytest --cov=foundaudio --cov-report=html
 ```
 
 ## 📊 Evaluation
@@ -203,7 +182,7 @@ This demonstrates how to build comprehensive tool evaluation systems for product
 uv sync
 
 # Run tests
-uv run pytest
+make test
 
 # Start development server
 uv run arcade serve --reload
@@ -224,7 +203,7 @@ uv run ruff format foundaudio/
 ./scripts/test-ci-locally.sh
 ```
 
-## 📚 Learning Resources
+## 📚 Additional Resources
 
 ### Arcade.dev Documentation
 
@@ -269,7 +248,7 @@ This project exemplifies my approach to software development:
 - Comprehensive test coverage
 - Proper error handling and validation
 - Security best practices (secret management)
-- Clear documentation and examples
+- Comprehensive documentation with verbose inline comments
 
 ### 3. **Proper Tooling Leveraged**
 
@@ -279,16 +258,7 @@ This project exemplifies my approach to software development:
 ### 4. **Production Readiness**
 
 - Evaluation capabilities
-- Scalable architecture patterns
-
-## 🏆 Key Achievements
-
-✅ **Modern Python Setup** - Using latest tooling and best practices  
-✅ **Comprehensive Testing** - Unit, integration, and validation tests  
-✅ **Security Best Practices** - Proper secret management  
-✅ **Well Documented** - Clear examples and comprehensive docs  
-✅ **Type Safety** - Full type hint coverage  
-✅ **Error Handling** - Robust validation and error management
+- CI/CD set with proper gitops practices enforced
 
 ## 📈 Next Steps
 
@@ -303,16 +273,4 @@ With the solid foundation established, future enhancements could include:
 
 ## 📄 License
 
-This project is for demonstration purposes.
-
-## 🙋‍♂️ Questions?
-
-For questions about this toolkit or Arcade.dev development:
-
-- **Arcade Community**: [Discord](https://discord.gg/arcade)
-- **Documentation**: [docs.arcade.dev](https://docs.arcade.dev)
-- **Issues**: Create an issue in this repository
-
----
-
-_Built with ❤️ using [Arcade.dev](https://arcade.dev) - Making AI take action_
+MIT. This project is for demonstration purposes.
