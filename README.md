@@ -262,12 +262,13 @@ This project exemplifies my approach to software development:
 
 With the solid foundation established, future enhancements could include:
 
+- **Evals** - Unfortunatley upon running `arcade eval` I was consistently met with errors
+- **Leverage other Toolkits** - Have an input, eg Gmail, which dictates which audio file to suggest.
 - **Advanced Search** - Fuzzy matching, semantic search
-- **Caching Layer** - Redis integration for performance
+- **Caching Layer** - To prevent having to call external API all the time
 - **Rate Limiting** - API quota management
-- **Monitoring** - Metrics and observability
-- **Multi-tenancy** - User-specific data isolation
-- **Real-time Features** - WebSocket support for live updates
+- **Monitoring** - Metrics and observability.
+- **Multi-tenancy** - User-specific data isolation (would be required if going the additional OAuth toolkit route)
 
 ## 📄 License
 
