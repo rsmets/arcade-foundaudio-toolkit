@@ -143,6 +143,14 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+# Trunk - ignore cache and generated files but keep configs
+.trunk/logs/
+.trunk/out/
+.trunk/notifications/
+.trunk/actions/
+.trunk/tools/
+.trunk/plugins/
+
 # Pyre type checker
 .pyre/
 
