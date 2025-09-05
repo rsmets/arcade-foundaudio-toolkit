@@ -29,7 +29,7 @@ def get_audio_list(
     """
     try:
         # Validate limit
-        if limit and (limit < 1 or limit > 100):
+        if limit is not None and (limit < 1 or limit > 100):
             raise ValueError("Limit must be between 1 and 100")
         
         # Get Supabase configuration
@@ -44,11 +44,11 @@ def get_audio_list(
         
         # Build query
         select_fields = "id, title, description, file_path, duration, genres, user_id, created_at, profiles (email, username)"
-        query = supabase.from("audio_files").select(select_fields)
+        query = getattr(supabase, 'from')("audio_files").select(select_fields)
         
         # Apply search filter
         if search:
-            query = query.or(f"title.ilike.%{search}%,description.ilike.%{search}%")
+            query = getattr(query, 'or')(f"title.ilike.%{search}%,description.ilike.%{search}%")
         
         # Apply genre filter
         if genre:
