@@ -4,6 +4,7 @@ import os
 
 from foundaudio.tools.get_audio_list import get_audio_list
 from arcade_core.errors import ToolExecutionError
+from arcade_tdk import ToolContext
 
 
 def test_get_audio_list_basic():
@@ -13,9 +14,12 @@ def test_get_audio_list_basic():
         
         # Mock environment variables
         mock_getenv.side_effect = lambda key, default=None: {
-            'SUPABASE_URL': 'https://test.supabase.co',
-            'SUPABASE_ANON_KEY': 'test-key'
+            'SUPABASE_URL': 'https://test.supabase.co'
         }.get(key, default)
+        
+        # Mock ToolContext
+        mock_context = Mock(spec=ToolContext)
+        mock_context.get_secret.return_value = 'test-secret-key'
         
         # Mock Supabase client
         mock_client = mock_create_client.return_value
@@ -38,7 +42,7 @@ def test_get_audio_list_basic():
         query_mock.order.return_value.limit.return_value.execute.return_value = mock_response
         mock_client.from_.return_value.select.return_value = query_mock
 
-        result = get_audio_list()
+        result = get_audio_list(mock_context)
 
         # Result is now a JSON string
         import json
@@ -50,8 +54,12 @@ def test_get_audio_list_basic():
 
 def test_get_audio_list_invalid_limit():
     """Test validation of limit parameter."""
+    # Mock ToolContext for validation tests
+    mock_context = Mock(spec=ToolContext)
+    mock_context.get_secret.return_value = 'test-secret-key'
+    
     with pytest.raises(ToolExecutionError, match="Error in execution of GetAudioList"):
-        get_audio_list(limit=0)
+        get_audio_list(mock_context, limit=0)
 
     with pytest.raises(ToolExecutionError, match="Error in execution of GetAudioList"):
-        get_audio_list(limit=101)
+        get_audio_list(mock_context, limit=101)
