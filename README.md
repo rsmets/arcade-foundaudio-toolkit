@@ -113,7 +113,7 @@ result = get_audio_list(search="pool", genre="House", limit=10)
 
 ## 🔐 Secret Management
 
-This toolkit demonstrates [Arcade's secret management](https://docs.arcade.dev/home/build-tools/create-a-tool-with-secrets) system via [ToolContext](https://docs.arcade.dev/home/build-tools/tool-context):
+This toolkit demonstrates [Arcade's secret management](https://docs.arcade.dev/home/build-tools/create-a-tool-with-secrets) system via [ToolContext](https://docs.arcade.dev/home/build-tools/tool-context). _Please reference the Arcade.dev documentation for information on how to set the Tool secrets_:
 
 ```python
 @tool(requires_secrets=["SUPABASE_ANON_KEY"])
@@ -122,8 +122,6 @@ def get_audio_list(context: ToolContext, ...):
 ```
 
 **Note:** The Supabase anonymous key is actually public (designed for browser use), but this demonstrates proper secret handling patterns for truly sensitive credentials.
-
-_Please reference the Arcade.dev documentation for information on how to set the Tool secrets_
 
 ## 🧪 Testing Strategy
 
@@ -191,9 +189,9 @@ uv run arcade serve --reload
 ### 2. Code Quality
 
 ```bash
-# Manual linting
-uv run ruff check foundaudio/
-uv run ruff format foundaudio/
+# Manual linting; However, this happens as trigger via the Trunk actions
+trunk check
+trunk fmt
 ```
 
 ### 3. Testing Locally
