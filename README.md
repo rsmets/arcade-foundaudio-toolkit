@@ -251,7 +251,7 @@ This project exemplifies my approach to software development:
 ### 3. **Proper Tooling Leveraged**
 
 - Modern tooling (uv instead of pip/poetry)
-- Trunk as a metalinter
+- Trunk as a [metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce source code standards and best practices.
 
 ### 4. **Production Readiness**
 
@@ -262,11 +262,11 @@ This project exemplifies my approach to software development:
 
 With the solid foundation established, future enhancements could include:
 
-- **Evals** - Unfortunatley, upon running `arcade eval`, I was consistently met with [errors](https://github.com/rsmets/arcade-foundaudio-toolkit/issues/9). _Note, I left say_hello tool in the project to have a sansity check baseline... even that eval was not functioning._
+- **Evals** - Unfortunately, upon running `arcade eval`, I was consistently met with [errors](https://github.com/rsmets/arcade-foundaudio-toolkit/issues/9). _Note, I left `say_hello` tool in the project to have a sanity check baseline, but even that eval was not functioning._
 - **Multi-tenancy** - User-specific data isolation (would require interfacing with an API in an authenticated state, ie with OAuth)
-- **Advanced Search** - Fuzzy matching, semantic search
-- **Caching Layer** - To prevent having to call external API all the time
-- **Rate Limiting** - API quota management
+- **More Tools** - Use more of the Found Audio api to do things like get profile/user info.
+- **User Auth** - Add tools that require Found Audio user authentication, eg post comments and like audio files.
+- **Caching Layer** - To prevent having to call the external API all the time
 - **Monitoring** - Metrics and observability.
 
 ## 📄 License
