@@ -2,10 +2,6 @@
 
 > An example [Arcade.dev](https://arcade.dev) toolkit demonstrating professional software development practices with a simple audio database API.
 
-[![Tests](https://github.com/username/foundaudio-toolkit/workflows/tests/badge.svg)](https://github.com/username/foundaudio-toolkit/actions)
-[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
-[![Arcade.dev](https://img.shields.io/badge/Arcade.dev-toolkit-green.svg)](https://arcade.dev)
-
 ## 🎯 Project Goals
 
 This project demonstrates how I approach software development by building a **production-ready toolkit** with professional standards:
@@ -21,16 +17,19 @@ The **Found Audio API** was chosen specifically for its simplicity - allowing fo
 ## 🛠️ Technology Stack
 
 ### Core Framework
+
 - **[Arcade.dev](https://arcade.dev)** - AI tool orchestration platform
 - **[Arcade TDK](https://docs.arcade.dev/home/build-tools/create-a-toolkit)** - Toolkit Development Kit
 
 ### Python Ecosystem
+
 - **[uv](https://docs.astral.sh/uv/)** - Modern Python package manager
 - **[pytest](https://pytest.org)** - Testing framework with async support
 - **[Supabase Python](https://supabase.com/docs/reference/python)** - Database client
 
 ### Development Tools
-- **Pre-commit hooks** - Code quality enforcement
+
+- **Trunk hooks** - Code quality enforcement
 - **GitHub Actions** - Continuous integration
 - **Type hints** - Static type checking support
 
@@ -56,6 +55,7 @@ foundaudio/
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Python 3.13+
 - [uv](https://docs.astral.sh/uv/getting-started/installation/) package manager
 
@@ -104,11 +104,13 @@ uv run arcade serve --reload
 Searches the Found Audio database with filtering and pagination.
 
 **Parameters:**
+
 - `limit` (int, optional): Number of results (1-100, default: 20)
 - `search` (str, optional): Search term for title/description
 - `genre` (str, optional): Filter by genre
 
 **Example Usage:**
+
 ```python
 # Basic search
 result = get_audio_list(limit=5)
@@ -118,6 +120,7 @@ result = get_audio_list(search="pool", genre="House", limit=10)
 ```
 
 **Returns:** JSON string with audio file metadata including:
+
 - ID, title, description
 - File path, duration, genres
 - User information and timestamps
@@ -163,7 +166,7 @@ def get_audio_list(context: ToolContext, ...):
 with patch('foundaudio.tools.get_audio_list.create_client') as mock_client:
     mock_context = Mock(spec=ToolContext)
     mock_context.get_secret.return_value = 'test-key'
-    
+
     result = get_audio_list(mock_context, limit=5)
     assert isinstance(result, str)
 ```
@@ -195,6 +198,7 @@ This demonstrates how to build comprehensive tool evaluation systems for product
 ## 🔄 Development Workflow
 
 ### 1. Local Development
+
 ```bash
 # Install dependencies
 uv sync
@@ -207,16 +211,15 @@ uv run arcade serve --reload
 ```
 
 ### 2. Code Quality
-```bash
-# Run pre-commit hooks
-pre-commit run --all-files
 
-# Manual linting (if needed)
+```bash
+# Manual linting
 uv run ruff check foundaudio/
 uv run ruff format foundaudio/
 ```
 
 ### 3. Testing Locally
+
 ```bash
 # Test like CI
 ./scripts/test-ci-locally.sh
@@ -225,6 +228,7 @@ uv run ruff format foundaudio/
 ## 📚 Learning Resources
 
 ### Arcade.dev Documentation
+
 - **[Getting Started](https://docs.arcade.dev/home/quickstart)** - Arcade basics
 - **[Building Tools](https://docs.arcade.dev/home/build-tools/create-a-toolkit)** - Tool development
 - **[Secret Management](https://docs.arcade.dev/home/build-tools/create-a-tool-with-secrets)** - Handling credentials
@@ -232,6 +236,7 @@ uv run ruff format foundaudio/
 - **[Deployment](https://docs.arcade.dev/home/serve-tools/arcade-deploy)** - Production deployment
 
 ### Python Ecosystem
+
 - **[uv Documentation](https://docs.astral.sh/uv/)** - Modern Python packaging
 - **[pytest Documentation](https://docs.pytest.org/)** - Testing framework
 - **[Supabase Python Client](https://supabase.com/docs/reference/python)** - Database integration
@@ -239,6 +244,7 @@ uv run ruff format foundaudio/
 ## 🚀 Production Deployment
 
 ### Using Arcade Deploy
+
 ```bash
 # Deploy to Arcade's managed infrastructure
 uv run arcade deploy
@@ -254,38 +260,38 @@ See [Arcade's deployment documentation](https://docs.arcade.dev/home/serve-tools
 This project exemplifies my approach to software development:
 
 ### 1. **Foundation First**
+
 - Establish robust development practices early
 - Focus on testing, tooling, and documentation
 - Build incrementally with solid foundations
 
 ### 2. **Professional Standards**
+
 - Comprehensive test coverage
 - Proper error handling and validation
 - Security best practices (secret management)
 - Clear documentation and examples
 
 ### 3. **Python Ecosystem Mastery**
+
 - Modern tooling (uv instead of pip/poetry)
 - Proper package structure and imports
 - Type hints and async support
 - Testing patterns and mocking
 
 ### 4. **Production Readiness**
-- CI/CD pipeline with GitHub Actions
-- Multiple deployment options
-- Monitoring and evaluation capabilities
+
+- Evaluation capabilities
 - Scalable architecture patterns
 
 ## 🏆 Key Achievements
 
 ✅ **Modern Python Setup** - Using latest tooling and best practices  
 ✅ **Comprehensive Testing** - Unit, integration, and validation tests  
-✅ **Professional CI/CD** - Automated testing and deployment  
 ✅ **Security Best Practices** - Proper secret management  
-✅ **Production Ready** - Multiple deployment options  
 ✅ **Well Documented** - Clear examples and comprehensive docs  
 ✅ **Type Safety** - Full type hint coverage  
-✅ **Error Handling** - Robust validation and error management  
+✅ **Error Handling** - Robust validation and error management
 
 ## 📈 Next Steps
 
@@ -300,7 +306,7 @@ With the solid foundation established, future enhancements could include:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is for demonstration purposes.
 
 ## 🙋‍♂️ Questions?
 
@@ -312,4 +318,4 @@ For questions about this toolkit or Arcade.dev development:
 
 ---
 
-*Built with ❤️ using [Arcade.dev](https://arcade.dev) - Making AI take action*
+_Built with ❤️ using [Arcade.dev](https://arcade.dev) - Making AI take action_

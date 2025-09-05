@@ -1,0 +1,14 @@
+name: Trunk Code Quality
+on:
+    pull_request:
+      types: [opened, synchronize, reopened, ready_for_review]
+      
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trunk Code Quality
+        uses: trunk-io/trunk-action@v1
+        with:
+          post-annotations: true 
