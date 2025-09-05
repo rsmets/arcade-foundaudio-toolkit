@@ -34,7 +34,7 @@ I really wanted to make a complex toolkit that would require OAuth to interface 
 
 - **[Trunk](https://trunk.io/)** - [Metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce standards and best practices. It should just work thanks to the [Launcher](https://docs.trunk.io/code-quality/setup-and-installation/initialize-trunk#the-trunk-launcher) however, it might require a separate install (I was not able to verify; I have it globally on my machine)
 - **[GitHub Actions](https://docs.github.com/en/actions)** - Continuous integration
-- **[Zed\*](https://zed.dev/)\* and **[Cursor](https://cursor.com/agents)\*\* text editors were used with a variety of foundation models to assist in authoring this toolkit
+- **[Zed](https://zed.dev/)** and \*\*[Cursor](https://cursor.com/agents)\*\* text editors were used with a variety of foundation models to assist in authoring this toolkit
 
 ## 🏗️ File System Layout
 
@@ -261,8 +261,8 @@ This project exemplifies my approach to software development:
 
 I feel all of the [project goals](#-project-goals) were achieved. I was able to successfully deploy my worker to Arcade.dev using Cloudflare and test via the dashboard tool calling interface.
 
-Worker URI: https://e58rbgi8n1svd5mpt8rxtr316-1972021761134002131.server.arcade.dev
-Secret: <default suggestion>
+Worker URI: `https://e58rbgi8n1svd5mpt8rxtr316-1972021761134002131.server.arcade.dev`
+Secret: `<default suggestion>`
 
 _It is unclear to me the best way to provide the information necessary for others to interface with this toolkit... the [deploy documentation](https://docs.arcade.dev/home/serve-tools/arcade-deploy) does not include information on this._
 
