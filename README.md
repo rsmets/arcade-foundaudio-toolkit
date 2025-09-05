@@ -6,12 +6,16 @@
 
 This project demonstrates how I approach software development by building a [toolkit](https://docs.arcade.dev/home/build-tools/create-a-toolkit) with professional software development standards practices:
 
-1. **🏗️ Foundation First**: Establish solid development practices before adding complex features
+1. **🏗️ Foundation First**: Establish solid development practices before adding higher-level features/tools.
 2. **🧪 Test-Driven**: Comprehensive test coverage with proper mocking and validation
-3. **🔧 Tooling**: Modern Python tooling (uv, pytest, linting, CI/CD)
+3. **🔧 Tooling**: Modern Python tooling (uv, pytest, metalinting via [Trunk](https://docs.trunk.io/code-quality/overview) (more comprehensive than what the scaffolding provided), tests run via standard trunk-based development gitops workflows via CI/CD)
 4. **📚 Documentation**: Comprehensive Readme with verbose inline comments
 
 The [Found Audio](https://foundaudio.club) search API was chosen specifically for its simplicity - allowing focus on development practices rather than complex business logic. _Note: I created and operate Found Audio._
+
+### Concessions
+
+I really wanted to make a complex toolkit that would require OAuth to interface with a popular API that is currently not listed as a public [integration](https://docs.arcade.dev/toolkits), for example Uber's API, but given the time constraint I opted to keep the API integration aspect of this project as simple as possible. Given the fact that this is a professional role's technical assessment, I emphasized spending my time showcasing professional development practices rather than more interesting business logic.
 
 ## 🛠️ Tools
 
@@ -28,7 +32,7 @@ The [Found Audio](https://foundaudio.club) search API was chosen specifically fo
 
 ### Development Tools
 
-- **Trunk** - [Metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce standards and best practices
+- **Trunk** - [Metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce standards and best practices. It should just work thanks to the [Launcher](https://docs.trunk.io/code-quality/setup-and-installation/initialize-trunk#the-trunk-launcher) however, it might require a separate install (I was not able to verify; I have it globally on my machine).
 - **GitHub Actions** - Continuous integration
 - **Zed** and **Cursor** text editors were used to assist in authoring this toolkit
 
@@ -117,7 +121,7 @@ result = get_audio_list(search="pool", genre="House", limit=10)
 
 ## 🔐 Secret Management
 
-This toolkit demonstrates [Arcade's secret management](https://docs.arcade.dev/home/build-tools/create-a-tool-with-secrets) system via [ToolContext](https://docs.arcade.dev/home/build-tools/tool-context). _Please reference the Arcade.dev documentation for information on how to set the Tool secrets_:
+This toolkit demonstrates [Arcade's secret management](https://docs.arcade.dev/home/build-tools/create-a-tool-with-secrets) system via [ToolContext](https://docs.arcade.dev/home/build-tools/tool-context). _Please reference the Arcade.dev documentation for information on how to set the `SUPABASE_ANON_KEY` Tool secret in your dashboard._:
 
 ```python
 @tool(requires_secrets=["SUPABASE_ANON_KEY"])
@@ -125,7 +129,7 @@ def get_audio_list(context: ToolContext, ...):
     supabase_key = context.get_secret("SUPABASE_ANON_KEY")
 ```
 
-**Note:** The Supabase anonymous key is actually public (designed for browser use), but this demonstrates proper secret handling patterns for truly sensitive credentials.
+**Note:** The Supabase [anonymous key](https://supabase.com/docs/guides/api/api-keys#anon-and-publishable-keys) is actually public, but this demonstrates proper secret handling patterns for truly sensitive credentials.
 
 ## 🧪 Testing Strategy
 
@@ -148,9 +152,9 @@ uv run pytest tests/test_get_audio_list.py::test_get_audio_list_basic -v
 ### Test Categories
 
 1. **Unit Tests** - Individual function testing with mocking
-2. **Integration Tests** - Real API interaction tests
-3. **Validation Tests** - Input parameter validation
-4. **Error Handling** - Exception and error case testing
+2. **Validation Tests** - Input parameter validation
+3. **Error Handling** - Exception and error case testing
+4. **Integration Tests** - Real API interaction tests _TODO: opted to keep the API mocked for simplicity_
 
 ### Key Testing Patterns
 
@@ -166,14 +170,7 @@ with patch('foundaudio.tools.get_audio_list.create_client') as mock_client:
 
 ## 📊 Evaluation
 
-The toolkit includes an evaluation suite for testing tool performance:
-
-```bash
-# Run evaluations
-uv run python evals/eval_foundaudio.py
-```
-
-This demonstrates how to build comprehensive tool evaluation systems for production AI applications.
+The toolkit attempted to include an evaluation suite for testing tool performance however as documented in an [issue](https://github.com/rsmets/arcade-foundaudio-toolkit/issues/9), I was unable to even run the scaffolding `say_hello` eval. _Note: I kept the `say_hello` tool defined in this project for a baseline sanity purposes; if this were a published toolkit, that would be the first cleanup item removed._
 
 ## 🔄 Development Workflow
 
