@@ -1,4 +1,4 @@
-# Found Audio Toolkit - Arcade.dev Example
+# Arcade.dev Found Audio Toolkit
 
 > An example [Arcade.dev](https://arcade.dev) toolkit demonstrating professional software development practices with a simple audio database API as requested in the take-home [assignment](ArcadeEngineeringInterviewProject.pdf). The downstream usage of this toolkit can be found the [arcade-mastra-agent](https://github.com/rsmets/arcade-mastra-agent) repo.
 
@@ -32,9 +32,9 @@ I really wanted to make a complex toolkit that would require OAuth to interface 
 
 ### Development Tools
 
-- **Trunk** - [Metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce standards and best practices. It should just work thanks to the [Launcher](https://docs.trunk.io/code-quality/setup-and-installation/initialize-trunk#the-trunk-launcher) however, it might require a separate install (I was not able to verify; I have it globally on my machine).
-- **GitHub Actions** - Continuous integration
-- **Zed** and **Cursor** text editors were used to assist in authoring this toolkit
+- **[Trunk](https://trunk.io/)** - [Metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce standards and best practices. It should just work thanks to the [Launcher](https://docs.trunk.io/code-quality/setup-and-installation/initialize-trunk#the-trunk-launcher) however, it might require a separate install (I was not able to verify; I have it globally on my machine)
+- **[GitHub Actions](https://docs.github.com/en/actions)** - Continuous integration
+- **[Zed](https://zed.dev/)** and **[Cursor](https://cursor.com/agents)** text editors were used with a variety of foundation models to assist in authoring this toolkit
 
 ## 🏗️ File System Layout
 
@@ -66,16 +66,14 @@ foundaudio/
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/rsmets/arcade-foundaudio-toolkit.git
 cd arcadeInterview/foundaudio
 
 # Install dependencies
-uv sync
+make install
 
 # Activate virtual environment
 source .venv/bin/activate  # Linux/Mac
-# or
-.venv\Scripts\activate     # Windows
 ```
 
 ### Starting the Development Server
@@ -258,6 +256,15 @@ This project exemplifies my approach to software development:
 
 - Evaluation capabilities
 - CI/CD set with proper gitops practices enforced
+
+## 🏆 Outcome
+
+I feel all of the [project goals](#-project-goals) were achieved. I was able to successfully deploy my worker to Arcade.dev using Cloudflare and test via the dashboard tool calling interface.
+
+Worker URI: `https://e58rbgi8n1svd5mpt8rxtr316-1972021761134002131.server.arcade.dev`
+Secret: `<default suggestion>`
+
+_It is unclear to me the best way to provide the information necessary for others to interface with this toolkit... the [deploy documentation](https://docs.arcade.dev/home/serve-tools/arcade-deploy) does not include information on this._
 
 ## 📈 Next Steps
 
