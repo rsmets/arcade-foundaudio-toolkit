@@ -75,7 +75,7 @@ jobs:
           cd foundaudio
           echo "Deployment completed for tag/release: ${{ github.ref_name }}"
 
-                    # Create arcade credentials directory and file for API key auth
+          # Create arcade credentials directory and file for API key auth
           mkdir -p ~/.arcade
           cat > ~/.arcade/credentials.yaml << EOF
           cloud:
