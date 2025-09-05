@@ -45,7 +45,13 @@ jobs:
           cd foundaudio
           # Create arcade credentials directory and file for API key auth
           mkdir -p ~/.arcade
-          echo "api_key: $ARCADE_API_KEY" > ~/.arcade/credentials.yaml
+          cat > ~/.arcade/credentials.yaml << EOF
+          cloud:
+            api:
+              key: $ARCADE_API_KEY
+          user:
+            email: rayjsmets@gmail.com
+          EOF
           uv run arcade deploy --deployment-file ../worker.toml
 
       - name: Get deployment info
