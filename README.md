@@ -29,13 +29,12 @@ The **Found Audio API** was chosen specifically for its simplicity - allowing fo
 
 ### Development Tools
 
-- **Trunk hooks** - Code quality enforcement
+- **Trunk** - Local linting
 - **GitHub Actions** - Continuous integration
-- **Type hints** - Static type checking support
 
 ## 🏗️ Architecture
 
-```
+```text
 foundaudio/
 ├── foundaudio/           # Main toolkit package
 │   ├── __init__.py      # Package initialization
@@ -235,7 +234,7 @@ uv run ruff format foundaudio/
 - **[Testing Tools](https://docs.arcade.dev/home/evaluate-tools/why-evaluate-tools)** - Evaluation strategies
 - **[Deployment](https://docs.arcade.dev/home/serve-tools/arcade-deploy)** - Production deployment
 
-### Python Ecosystem
+### Python Tools & Libraries
 
 - **[uv Documentation](https://docs.astral.sh/uv/)** - Modern Python packaging
 - **[pytest Documentation](https://docs.pytest.org/)** - Testing framework
@@ -249,7 +248,7 @@ uv run ruff format foundaudio/
 # Deploy to Arcade's managed infrastructure
 uv run arcade deploy
 
-# Monitor deployment
+# Check deployment status
 uv run arcade deploy status
 ```
 
@@ -272,12 +271,10 @@ This project exemplifies my approach to software development:
 - Security best practices (secret management)
 - Clear documentation and examples
 
-### 3. **Python Ecosystem Mastery**
+### 3. **Proper Tooling Leveraged**
 
 - Modern tooling (uv instead of pip/poetry)
-- Proper package structure and imports
-- Type hints and async support
-- Testing patterns and mocking
+- Trunk as a metalinter
 
 ### 4. **Production Readiness**
 
