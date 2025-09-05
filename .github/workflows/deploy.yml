@@ -42,7 +42,8 @@ jobs:
         env:
           ARCADE_API_KEY: ${{ secrets.ArcadeApiKey }}
         run: |
-          uv run arcade deploy
+          cd foundaudio
+          uv run arcade deploy --deployment-file ../worker.toml
 
       - name: Get deployment info
         env:
