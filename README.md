@@ -11,7 +11,7 @@ This project demonstrates how I approach software development by building a [too
 3. **🔧 Tooling**: Modern Python tooling (uv, pytest, linting, CI/CD)
 4. **📚 Documentation**: Comprehensive Readme with verbose inline comments
 
-The **Found Audio API** was chosen specifically for its simplicity - allowing focus on development practices rather than complex business logic.
+The [Found Audio](https://foundaudio.club) search API was chosen specifically for its simplicity - allowing focus on development practices rather than complex business logic. _Note: I created and operate Found Audio._
 
 ## 🛠️ Tools
 
