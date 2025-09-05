@@ -9,11 +9,11 @@ This project demonstrates how I approach software development by building a [too
 1. **🏗️ Foundation First**: Establish solid development practices before adding complex features
 2. **🧪 Test-Driven**: Comprehensive test coverage with proper mocking and validation
 3. **🔧 Tooling**: Modern Python tooling (uv, pytest, linting, CI/CD)
-4. **📚 Documentation**: Verbose inline comments
+4. **📚 Documentation**: Comprehensive Readme with verbose inline comments
 
 The **Found Audio API** was chosen specifically for its simplicity - allowing focus on development practices rather than complex business logic.
 
-## 🛠️ Technology Stack
+## 🛠️ Tools
 
 ### Core Framework
 
@@ -32,11 +32,11 @@ The **Found Audio API** was chosen specifically for its simplicity - allowing fo
 - **GitHub Actions** - Continuous integration
 - **Zed** and **Cursor** text editors were used to assist in authoring this toolkit
 
-## 🏗️ Architecture
+## 🏗️ File System Layout
 
 ```text
 foundaudio/
-├── foundaudio/           # Main toolkit package
+├── foundaudio/          # Main toolkit package
 │   ├── __init__.py      # Package initialization
 │   └── tools/           # Arcade tools
 │       ├── __init__.py  # Tool registration
