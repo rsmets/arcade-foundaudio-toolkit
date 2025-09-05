@@ -4,7 +4,8 @@ import os
 
 from arcade_tdk import tool, ToolContext
 
-
+# NOTE: the supabase key is actually not a secret!
+# It is meant to be used in the browser and thus is public. The secret context was used as a placeholder to show how to properly handle secrets in the toolkit.
 @tool(requires_secrets=["SUPABASE_ANON_KEY"])
 def get_audio_list(
     context: ToolContext,
