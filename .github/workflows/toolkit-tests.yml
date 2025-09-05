@@ -34,36 +34,3 @@ jobs:
         run: |
           cd foundaudio
           pytest tests/ -v --cov=foundaudio --cov-report=xml --cov-report=term-missing --cov-fail-under=80
-
-      - name: Comment PR with test results
-        if: always()
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-
-            // Read test results if available
-            let testResults = '';
-            try {
-              if (fs.existsSync('test-results.xml')) {
-                testResults = '\n\n📊 **Test Results:**\n- All tests passed successfully!';
-              }
-            } catch (error) {
-              console.log('No test results file found');
-            }
-
-            const comment = `## 🧪 PR Checks Complete
-
-            ✅ **Code Quality:** Linting and type checking passed
-            ✅ **Tests:** All tests executed successfully
-            ${testResults}
-
-            This PR is ready for review! 🚀`;
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
