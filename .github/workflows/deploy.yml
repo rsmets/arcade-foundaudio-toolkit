@@ -49,10 +49,22 @@ jobs:
           cloud:
             api:
               key: $ARCADE_API_KEY
-            user:
-              email: rayjsmets@gmail.com
+          user:
+            email: rayjsmets@gmail.com
           EOF
-          uv run arcade deploy --deployment-file ../worker.toml
+
+          # Temporarily move .venv to avoid packaging issues
+          if [ -d ".venv" ]; then
+            mv .venv ../.venv-temp
+          fi
+
+          # Deploy without .venv directory
+          uv run --python ../.venv-temp/bin/python arcade deploy --deployment-file ../worker.toml
+
+          # Restore .venv directory
+          if [ -d "../.venv-temp" ]; then
+            mv ../.venv-temp .venv
+          fi
 
       - name: Get deployment info
         env:
