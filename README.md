@@ -32,7 +32,7 @@ I really wanted to make a complex toolkit that would require OAuth to interface 
 
 ### Development Tools
 
-- **Trunk** - [Metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce standards and best practices
+- **Trunk** - [Metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce standards and best practices. It should just work thanks to the [Launcher](https://docs.trunk.io/code-quality/setup-and-installation/initialize-trunk#the-trunk-launcher) however, it might require a separate install (I was not able to verify; I have it globally on my machine).
 - **GitHub Actions** - Continuous integration
 - **Zed** and **Cursor** text editors were used to assist in authoring this toolkit
 
