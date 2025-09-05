@@ -36,7 +36,7 @@ def test_get_audio_list_basic():
         
         query_mock = Mock()
         query_mock.order.return_value.limit.return_value.execute.return_value = mock_response
-        getattr(mock_client, 'from').return_value.select.return_value = query_mock
+        mock_client.from_.return_value.select.return_value = query_mock
 
         result = get_audio_list()
 

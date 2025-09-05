@@ -34,21 +34,20 @@ def get_audio_list(
         
         # Get Supabase configuration
         supabase_url = os.getenv("SUPABASE_URL", "https://msocrbprgpaqvrtrcqpo.supabase.co")
-        supabase_key = os.getenv("SUPABASE_ANON_KEY")
+        supabase_key = os.getenv("SUPABASE_ANON_KEY", "sb_publishable_4L_ms4VzC-6HXYgq90P3Nw_1AGhi3Hm")
         
-        if not supabase_key:
-            raise RuntimeError("SUPABASE_ANON_KEY environment variable is required")
+        # supabase_key will always have a value due to the default, so no need to check
         
         # Create Supabase client
         supabase = create_client(supabase_url, supabase_key)
         
         # Build query
         select_fields = "id, title, description, file_path, duration, genres, user_id, created_at, profiles (email, username)"
-        query = getattr(supabase, 'from')("audio_files").select(select_fields)
+        query = supabase.from_("audio_files").select(select_fields)
         
         # Apply search filter
         if search:
-            query = getattr(query, 'or')(f"title.ilike.%{search}%,description.ilike.%{search}%")
+            query = query.or_(f"title.ilike.%{search}%,description.ilike.%{search}%")
         
         # Apply genre filter
         if genre:
