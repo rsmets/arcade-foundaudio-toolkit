@@ -28,7 +28,3 @@ This is an [Arcade.dev](https://arcade.dev) toolkit demonstrating professional P
 
 ## Development Philosophy
 This project emphasizes **Foundation First** - establishing solid development practices before adding features, with comprehensive testing, proper error handling, and professional documentation standards.
-description:
-globs:
-alwaysApply: false
----

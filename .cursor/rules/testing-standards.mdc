@@ -1,5 +1,7 @@
 ---
 globs: foundaudio/tests/**/*.py
+description: Testing standards and patterns for Arcade.dev toolkit
+alwaysApply: true
 ---
 
 # Testing Standards for Arcade.dev Toolkit
@@ -53,9 +55,3 @@ mock_getenv.side_effect = lambda key, default=None: {
 - Use section comments: `# SETUP:`, `# EXECUTE:`, `# VERIFY:`
 - Document why specific error types are expected
 - Explain business logic being tested
-```
-
-description:
-globs:
-alwaysApply: false
----

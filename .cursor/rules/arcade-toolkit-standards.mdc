@@ -1,5 +1,7 @@
 ---
 globs: foundaudio/**/*.py
+description:
+alwaysApply: false
 ---
 
 # Arcade.dev Toolkit Development Standards
@@ -39,9 +41,3 @@ if limit is not None and (limit < 1 or limit > 100):
 - Always check if secrets exist: `if not supabase_key: raise RuntimeError(...)`
 - Use environment variables with defaults for configuration
 - Document that some "secrets" may be public (like Supabase anon keys) but follow patterns
-```
-
-description:
-globs:
-alwaysApply: false
----

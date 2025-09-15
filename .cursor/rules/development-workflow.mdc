@@ -54,7 +54,3 @@ arcade eval  # Run evaluation suite (currently has issues - see GitHub issues)
 - **Test-Driven**: Write tests for all functionality with proper mocking
 - **Error Handling**: Distinguish between user errors and system errors
 - **Security**: Proper secret management patterns even for public keys
-description:
-globs:
-alwaysApply: false
----
