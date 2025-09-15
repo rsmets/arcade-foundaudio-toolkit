@@ -70,7 +70,12 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            NumericCritic(critic_field="limit", tolerance=0, weight=1.0),
+            NumericCritic(
+                critic_field="limit",
+                weight=1.0,
+                value_range=(1, 100),
+                match_threshold=1.0,
+            ),
         ],
     )
 
@@ -120,7 +125,12 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            NumericCritic(critic_field="limit", tolerance=0, weight=0.33),
+            NumericCritic(
+                critic_field="limit",
+                weight=0.33,
+                value_range=(1, 100),
+                match_threshold=1.0,
+            ),
             SimilarityCritic(critic_field="search", weight=0.33),
             SimilarityCritic(critic_field="genre", weight=0.34),
         ],
@@ -154,7 +164,12 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            NumericCritic(critic_field="limit", tolerance=0, weight=1.0),
+            NumericCritic(
+                critic_field="limit",
+                weight=1.0,
+                value_range=(1, 100),
+                match_threshold=1.0,
+            ),
         ],
     )
 
@@ -168,7 +183,12 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            NumericCritic(critic_field="limit", tolerance=0, weight=1.0),
+            NumericCritic(
+                critic_field="limit",
+                weight=1.0,
+                value_range=(1, 100),
+                match_threshold=1.0,
+            ),
         ],
     )
 
@@ -321,7 +341,12 @@ def foundaudio_eval_suite() -> EvalSuite:
         critics=[
             # This case tests that the tool properly validates limits
             # The tool should either reject the call or cap at 100
-            NumericCritic(critic_field="limit", tolerance=0, weight=1.0),
+            NumericCritic(
+                critic_field="limit",
+                weight=1.0,
+                value_range=(1, 100),
+                match_threshold=1.0,
+            ),
         ],
     )
 
@@ -337,7 +362,12 @@ def foundaudio_eval_suite() -> EvalSuite:
         critics=[
             # This case tests that the tool properly validates limits
             # The tool should either reject the call or use minimum of 1
-            NumericCritic(critic_field="limit", tolerance=0, weight=1.0),
+            NumericCritic(
+                critic_field="limit",
+                weight=1.0,
+                value_range=(1, 100),
+                match_threshold=1.0,
+            ),
         ],
     )
 

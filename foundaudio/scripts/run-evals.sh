@@ -43,7 +43,7 @@ echo "     * Name extraction and edge cases"
 echo "     * Multi-turn conversation flow"
 echo ""
 
-arcade evals .
+uv run --no-sources arcade evals -h api.arcade.dev .
 
 echo ""
 echo "✅ Evaluation complete!"

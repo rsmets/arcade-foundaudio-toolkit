@@ -240,19 +240,15 @@ The toolkit includes comprehensive evaluation suites for testing tool performanc
 # Option 1: Using Makefile (recommended)
 make eval
 
-# Option 2: Using the evaluation script
-./scripts/run-evals.sh
-
-# Option 3: Manual commands
-uv pip install 'arcade-ai[evals]'
+# Option 2: Manual commands
 cd foundaudio/evals
 
 # Run all evaluations
 arcade evals .
 
 # Run specific evaluation files
-arcade evals eval_foundaudio.py  # Audio search tool only
-arcade evals eval_hello.py       # Hello tool only
+arcade evals -h api.arcade.dev eval_foundaudio.py  # Audio search tool only
+arcade evals -h api.arcade.dev eval_hello.py       # Hello tool only
 ```
 
 ### Evaluation Rubric

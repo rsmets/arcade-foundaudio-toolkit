@@ -7,7 +7,11 @@ name = "foundaudio"
 version = "0.3.0"
 description = "interface with found audio"
 requires-python = ">=3.10"
-dependencies = ["arcade-tdk>=2.0.0,<3.0.0", "supabase>=2.0.0,<3.0.0"]
+dependencies = [
+  "arcade-tdk>=2.0.0,<3.0.0",
+  "supabase>=2.0.0,<3.0.0",
+  "websockets>=12.0,<15.0",
+]
 [[project.authors]]
 name = "rsmets"
 email = "hello@raymsets.com"
