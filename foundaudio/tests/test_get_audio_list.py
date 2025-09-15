@@ -210,7 +210,8 @@ def test_get_audio_list_missing_secret():
         # TEST: Verify that missing secret raises ToolExecutionError (not retryable)
         # This is a system/configuration error that user cannot fix by changing input
         with pytest.raises(
-            ToolExecutionError, match="Error in execution of GetAudioList"
+            ToolExecutionError,
+            match="Error accessing audio database: SUPABASE_ANON_KEY secret is not configured",
         ):
             get_audio_list(mock_context)
 
