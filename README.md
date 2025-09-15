@@ -203,7 +203,74 @@ with patch('foundaudio.tools.get_audio_list.create_client') as mock_client:
 
 ## 📊 Evaluation
 
-The toolkit attempted to include an evaluation suite for testing tool performance however as documented in an [issue](https://github.com/rsmets/arcade-foundaudio-toolkit/issues/9), I was unable to even run the scaffolding `say_hello` eval. _Note: I kept the `say_hello` tool defined in this project for a baseline sanity purposes; if this were a published toolkit, that would be the first cleanup item removed._
+The toolkit includes comprehensive evaluation suites for testing tool performance and AI assistant behavior. The evaluation suites are located in the `foundaudio/evals/` directory:
+
+- `eval_foundaudio.py` - Audio search tool evaluations
+- `eval_hello.py` - Hello tool evaluations
+
+### Evaluation Categories
+
+#### 1. **Hello Tool Evaluations** (`eval_hello.py`)
+
+- Simple greeting scenarios
+- Contextual greetings with conversation history
+- Name extraction and parameter passing
+- Edge cases (empty names, special characters)
+- Multi-turn conversation flow
+
+#### 2. **Audio Search Tool Evaluations** (`eval_foundaudio.py`)
+
+- **Basic Functionality**: No filters, limit parameters, search terms, genre filters
+- **Combined Filters**: Multiple parameter combinations (limit + search + genre)
+- **Parameter Validation**: Boundary testing (min/max limits)
+- **Edge Cases**: Empty search terms, whitespace handling, special characters
+- **Complex Scenarios**: Multi-genre context, artist-specific searches, duration context
+- **Conversation Context**: Multi-turn conversations with user preferences
+- **Error Scenarios**: Invalid parameter handling
+
+#### 3. **Critic Types Used**
+
+- `BinaryCritic`: Exact parameter matching
+- `SimilarityCritic`: Semantic similarity for search terms and genres
+- `NumericCritic`: Numeric parameter validation with tolerance
+
+### Running Evaluations
+
+```bash
+# Option 1: Using Makefile (recommended)
+make eval
+
+# Option 2: Using the evaluation script
+./scripts/run-evals.sh
+
+# Option 3: Manual commands
+uv pip install 'arcade-ai[evals]'
+cd foundaudio/evals
+
+# Run all evaluations
+arcade evals .
+
+# Run specific evaluation files
+arcade evals eval_foundaudio.py  # Audio search tool only
+arcade evals eval_hello.py       # Hello tool only
+```
+
+### Evaluation Rubric
+
+The evaluation suite uses a rubric with:
+
+- **Fail Threshold**: 0.8 (80% accuracy required)
+- **Warn Threshold**: 0.9 (90% accuracy for warnings)
+
+This comprehensive evaluation suite ensures the AI assistant correctly:
+
+- Extracts user intent from natural language
+- Applies appropriate filters and parameters
+- Handles edge cases and error scenarios
+- Maintains context across conversation turns
+- Validates input parameters properly
+
+_Note: The `say_hello` tool is included for baseline testing and can be removed in production deployments._
 
 ## 🔄 Development Workflow
 
@@ -331,13 +398,13 @@ _It is unclear to me the best way to provide the information necessary for other
 
 With the solid foundation established, future enhancements could include:
 
-- **Evals** - Unfortunately, upon running `arcade eval`, I was consistently met with [errors](https://github.com/rsmets/arcade-foundaudio-toolkit/issues/9). _Note, I left `say_hello` tool in the project to have a sanity check baseline, but even that eval was not functioning._
+- **✅ Evaluations** - Comprehensive evaluation suite implemented with 20+ test cases covering all tool functionality
 - **Multi-tenancy** - User-specific data isolation (would require interfacing with an API in an authenticated state, ie with OAuth)
-- **More Tools** - Use more of the Found Audio api to do things like get profile/user info.
-- **User Auth** - Add tools that require Found Audio user authentication, eg post comments and like audio files.
+- **More Tools** - Use more of the Found Audio api to do things like get profile/user info
+- **User Auth** - Add tools that require Found Audio user authentication, eg post comments and like audio files
 - **Caching Layer** - To prevent having to call the external API all the time
-- **Monitoring** - Metrics and observability.
-- **Enhanced Monitoring** - Add deployment success/failure notifications and monitoring dashboards.
+- **Monitoring** - Metrics and observability
+- **Enhanced Monitoring** - Add deployment success/failure notifications and monitoring dashboards
 
 ## 📄 License
 
