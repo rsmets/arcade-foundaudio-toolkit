@@ -1,7 +1,7 @@
 import os
 from typing import Annotated, Any, Dict, List, Optional
 
-from arcade_core.errors import RetryableToolError
+from arcade_core.errors import RetryableToolError, ToolExecutionError
 from arcade_tdk import ToolContext, tool
 from pydantic import BaseModel
 from supabase import create_client
@@ -49,7 +49,7 @@ def get_audio_list(
 
     Raises:
         RetryableToolError: If there's a recoverable error (e.g., invalid parameters)
-        RuntimeError: If there's an unrecoverable error connecting to the database
+        ToolExecutionError: If there's an unrecoverable error (e.g., missing configuration)
     """
     # Validate limit parameter - use RetryableToolError for parameter validation
     if limit is not None and (limit < 1 or limit > 100):
@@ -66,7 +66,7 @@ def get_audio_list(
         supabase_key = context.get_secret("SUPABASE_ANON_KEY")
 
         if not supabase_key:
-            raise RuntimeError("SUPABASE_ANON_KEY secret is not configured")
+            raise ToolExecutionError("SUPABASE_ANON_KEY secret is not configured")
 
         # Create Supabase client
         supabase = create_client(supabase_url, supabase_key)
@@ -130,5 +130,5 @@ def get_audio_list(
         # Re-raise RetryableToolError as-is
         raise
     except Exception as e:
-        # For unexpected errors, raise RuntimeError (will be caught by @tool decorator)
-        raise RuntimeError(f"Error accessing audio database: {str(e)}")
+        # For unexpected errors, raise ToolExecutionError (will be caught by @tool decorator)
+        raise ToolExecutionError(f"Error accessing audio database: {str(e)}") from e
