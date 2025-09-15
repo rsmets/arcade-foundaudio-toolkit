@@ -13,7 +13,7 @@ class AudioFile(BaseModel):
     id: str
     title: str
     description: Optional[str] = None
-    file_path: str
+    url: str
     duration: Optional[float] = None
     genres: List[str] = []
     user_id: str
@@ -72,7 +72,9 @@ def get_audio_list(
         supabase = create_client(supabase_url, supabase_key)
 
         # Build query - select fields that actually exist in the API response
-        select_fields = "id, title, description, file_path, duration, genres, user_id, created_at, updated_at"
+        select_fields = (
+            "id, title, description, duration, genres, user_id, created_at, updated_at"
+        )
         query = supabase.from_("audio_files").select(select_fields)
 
         # Apply search filter
@@ -106,12 +108,12 @@ def get_audio_list(
                 id=item["id"],
                 title=item["title"],
                 description=item.get("description"),
-                file_path=item["file_path"],
                 duration=item.get("duration"),
                 genres=item.get("genres", []),
                 user_id=item["user_id"],
                 created_at=item["created_at"],
                 updated_at=item["updated_at"],
+                url="https://foundaudio.club/audio/" + item["id"],
             )
 
             # Convert to dictionary for return

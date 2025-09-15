@@ -41,7 +41,6 @@ def test_get_audio_list_basic():
                 "id": "123",
                 "title": "Test Track",
                 "description": "A test track",
-                "file_path": "audio/test.mp3",
                 "duration": 180.5,
                 "genres": ["electronic"],
                 "user_id": "user123",
@@ -93,6 +92,13 @@ def test_get_audio_list_basic():
         if result["audio_files"][0]["updated_at"] != "2024-01-01T00:00:00Z":
             raise AssertionError(
                 f"Expected updated_at '2024-01-01T00:00:00Z', got {result['audio_files'][0]['updated_at']}"
+            )
+
+        # Verify URL generation - should be generated from ID
+        expected_url = "https://foundaudio.club/audio/123"
+        if result["audio_files"][0]["url"] != expected_url:
+            raise AssertionError(
+                f"Expected URL '{expected_url}', got {result['audio_files'][0]['url']}"
             )
 
         # Verify metadata fields
@@ -245,7 +251,6 @@ def test_get_audio_list_with_filters():
                 "id": "456",
                 "title": "House Track",
                 "description": "A house music track",
-                "file_path": "audio/house.mp3",
                 "duration": 240.0,
                 "genres": ["house"],
                 "user_id": "user456",
@@ -307,6 +312,13 @@ def test_get_audio_list_with_filters():
                 f"Expected updated_at '2024-01-02T00:00:00Z', got {result['audio_files'][0]['updated_at']}"
             )
 
+        # Verify URL generation for filtered results - should be generated from ID
+        expected_url = "https://foundaudio.club/audio/456"
+        if result["audio_files"][0]["url"] != expected_url:
+            raise AssertionError(
+                f"Expected URL '{expected_url}', got {result['audio_files'][0]['url']}"
+            )
+
         # Verify metadata fields include applied filters
         if result["count"] != 1:
             raise AssertionError(f"Expected count 1, got {result['count']}")
@@ -324,3 +336,97 @@ def test_get_audio_list_with_filters():
         or_mock.contains.assert_called_once_with("genres", ["house"])
         contains_mock.order.assert_called_once_with("created_at", desc=True)
         order_mock.limit.assert_called_once_with(10)
+
+
+def test_get_audio_list_url_generation():
+    """NORMAL OPERATION: Test URL generation format and consistency.
+
+    This test verifies that the tool correctly generates URLs for audio files
+    using the expected pattern: https://foundaudio.club/audio/{id}
+    """
+    with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv, patch(
+        "foundaudio.tools.get_audio_list.create_client"
+    ) as mock_create_client:
+
+        # SETUP: Mock environment variables for Supabase configuration
+        mock_getenv.side_effect = lambda key, default=None: {
+            "SUPABASE_URL": "https://test.supabase.co"
+        }.get(key, default)
+
+        # SETUP: Mock ToolContext with valid secret
+        mock_context = Mock(spec=ToolContext)
+        mock_context.get_secret.return_value = "test-secret-key"
+
+        # SETUP: Mock Supabase client with multiple audio files to test URL generation
+        mock_client = mock_create_client.return_value
+        mock_response = Mock()
+        # Simulate database returning multiple audio files with different IDs
+        mock_response.data = [
+            {
+                "id": "abc123",
+                "title": "Track One",
+                "description": "First test track",
+                "duration": 120.0,
+                "genres": ["rock"],
+                "user_id": "user1",
+                "created_at": "2024-01-01T00:00:00Z",
+                "updated_at": "2024-01-01T00:00:00Z",
+            },
+            {
+                "id": "xyz789",
+                "title": "Track Two",
+                "description": "Second test track",
+                "duration": 180.0,
+                "genres": ["jazz"],
+                "user_id": "user2",
+                "created_at": "2024-01-02T00:00:00Z",
+                "updated_at": "2024-01-02T00:00:00Z",
+            },
+        ]
+
+        # SETUP: Mock the Supabase query chain
+        query_mock = Mock()
+        query_mock.order.return_value.limit.return_value.execute.return_value = (
+            mock_response
+        )
+        mock_client.from_.return_value.select.return_value = query_mock
+
+        # EXECUTE: Call the function under test
+        result = get_audio_list(mock_context)
+
+        # VERIFY: Check that URLs are generated correctly for each audio file
+        if not isinstance(result, dict) or "audio_files" not in result:
+            raise AssertionError("Expected result with audio_files key")
+
+        audio_files = result["audio_files"]
+        if len(audio_files) != 2:
+            raise AssertionError(f"Expected 2 audio files, got {len(audio_files)}")
+
+        # Verify URL format for first audio file
+        expected_url_1 = "https://foundaudio.club/audio/abc123"
+        if audio_files[0]["url"] != expected_url_1:
+            raise AssertionError(
+                f"Expected URL '{expected_url_1}', got {audio_files[0]['url']}"
+            )
+
+        # Verify URL format for second audio file
+        expected_url_2 = "https://foundaudio.club/audio/xyz789"
+        if audio_files[1]["url"] != expected_url_2:
+            raise AssertionError(
+                f"Expected URL '{expected_url_2}', got {audio_files[1]['url']}"
+            )
+
+        # Verify that URLs follow the expected pattern (base URL + ID)
+        base_url = "https://foundaudio.club/audio/"
+        for i, audio_file in enumerate(audio_files):
+            if not audio_file["url"].startswith(base_url):
+                raise AssertionError(
+                    f"Expected URL to start with '{base_url}', got {audio_file['url']}"
+                )
+            # Extract ID from URL and verify it matches the original ID
+            url_id = audio_file["url"].replace(base_url, "")
+            expected_id = mock_response.data[i]["id"]
+            if url_id != expected_id:
+                raise AssertionError(
+                    f"Expected URL to contain ID '{expected_id}', got '{url_id}'"
+                )

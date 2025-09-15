@@ -13,6 +13,41 @@ This project demonstrates how I approach software development by building a [too
 
 The [Found Audio](https://foundaudio.club) search API was chosen specifically for its simplicity - allowing focus on development practices rather than complex business logic. _Note: I created and operate Found Audio._
 
+### MCP Design
+
+This toolkit follows [MCP design best practices](https://liquidmetal.ai/casesAndBlogs/mcp-api-wrapper-antipattern/) that avoid common API wrapper antipatterns:
+
+#### Design Principles
+
+1. **Design for Intent, Not API Mapping**
+   - Focus on user workflows rather than individual API endpoints
+   - Map what users actually want to accomplish with the service
+   - Example: "Search for audio files" rather than exposing raw database queries
+
+2. **Build Intelligence into MCP Server**
+   - Handle complexity internally (name resolution, ambiguity, context conversion)
+   - Let the LLM focus on the actual task instead of system integration
+   - Example: Our tool handles genre filtering and search logic internally
+
+3. **Design Responses for Language Models**
+   - Return structured, parseable information
+   - Skip unnecessary data that clutters AI agent context
+   - Focus on what the LLM needs to complete the task
+
+4. **Handle Errors Like a Helpful Colleague**
+   - Provide clear explanations of what went wrong
+   - Suggest specific next steps for recovery
+   - Use `RetryableToolError` for user-fixable issues with actionable guidance
+
+#### Implementation in This Toolkit
+
+Our `get_audio_list` tool demonstrates these principles:
+
+- **Single Intent**: One call searches and filters audio files (vs. multiple API calls)
+- **Intelligent Error Handling**: Clear validation messages with specific parameter guidance
+- **Structured Responses**: Clean data models that AI agents can easily work with
+- **Context-Aware**: Handles search, filtering, and pagination in one operation
+
 ### Concessions
 
 I really wanted to make a complex toolkit that would require OAuth to interface with a popular API that is currently not listed as a public [integration](https://docs.arcade.dev/toolkits), for example Uber's API, but given the time constraint I opted to keep the API integration aspect of this project as simple as possible. Given the fact that this is a professional role's technical assessment, I emphasized spending my time showcasing professional development practices rather than more interesting business logic.
