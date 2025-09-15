@@ -1,6 +1,6 @@
 # Command
 
-Create a pull request based on changes from the current branch vs main:
+Create a pull request using the `gh` cli tool, eg `gh pr create` based on changes from the current branch vs main:
 
 1. **Analyze the changes:**
    - Get the git diff between current branch and main
