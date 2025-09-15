@@ -55,35 +55,29 @@ check: ## Run code quality tools.
 .PHONY: deploy
 deploy: ## Deploy the toolkit to Arcade.dev worker
 	@echo "🚀 Deploying toolkit to Arcade.dev worker"
-	@echo "📦 Temporarily moving .venv folder to avoid deployment conflicts"
+	@echo "🗑️ Removing .venv folder to avoid deployment conflicts"
 	@if [ -d .venv ]; then \
-		mv .venv venv_backup_$$(date +%s); \
-		echo "✅ .venv folder moved to venv_backup_$$(date +%s)"; \
+		rm -rf .venv; \
+		echo "✅ .venv folder removed"; \
 	fi
 	@echo "🚀 Running arcade deploy from project root"
 	@cd .. && uv run arcade deploy || ( \
-		echo "❌ Deployment failed, restoring .venv folder..."; \
-		if [ -d venv_backup_* ]; then \
-			mv venv_backup_* .venv; \
-			echo "✅ .venv folder restored"; \
-		fi; \
+		echo "❌ Deployment failed, recreating .venv folder..."; \
+		cd foundaudio && uv sync --active --all-extras --no-sources; \
+		echo "✅ .venv folder recreated"; \
 		exit 1; \
 	)
 	@echo "✅ Deployment completed successfully"
-	@echo "🔄 Restoring .venv folder..."
-	@if [ -d venv_backup_* ]; then \
-		mv venv_backup_* .venv; \
-		echo "✅ .venv folder restored"; \
-	else \
-		echo "⚠️  No .venv backup found to restore"; \
-	fi
+	@echo "🔄 Recreating .venv folder..."
+	@cd foundaudio && uv sync --active --all-extras --no-sources
+	@echo "✅ .venv folder recreated"
 
 .PHONY: deploy-clean
-deploy-clean: ## Clean up any leftover .venv backup folders
-	@echo "🧹 Cleaning up .venv backup folders"
-	@if [ -d venv_backup_* ]; then \
-		rm -rf venv_backup_*; \
-		echo "✅ Cleaned up .venv backup folders"; \
+deploy-clean: ## Clean up .venv folder (useful for troubleshooting)
+	@echo "🧹 Cleaning up .venv folder"
+	@if [ -d .venv ]; then \
+		rm -rf .venv; \
+		echo "✅ .venv folder removed"; \
 	else \
-		echo "ℹ️  No .venv backup folders found to clean"; \
+		echo "ℹ️  No .venv folder found to clean"; \
 	fi
