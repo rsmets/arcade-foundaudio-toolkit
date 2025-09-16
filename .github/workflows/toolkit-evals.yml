@@ -48,6 +48,5 @@ jobs:
 
       - name: Run evals
         run: |
-          # Temporarily move .venv to avoid packaging issues
           cd foundaudio
           uv run arcade evals -h api.arcade.dev evals/eval_foundaudio.py
