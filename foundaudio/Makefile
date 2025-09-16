@@ -61,7 +61,7 @@ deploy: ## Deploy the toolkit to Arcade.dev worker
 		echo "✅ .venv folder removed"; \
 	fi
 	@echo "🚀 Running arcade deploy from project root"
-	@cd .. && uv run arcade deploy || ( \
+	@cd .. && arcade deploy || ( \
 		echo "❌ Deployment failed, recreating .venv folder..."; \
 		cd foundaudio && uv sync --active --all-extras --no-sources; \
 		echo "✅ .venv folder recreated"; \
