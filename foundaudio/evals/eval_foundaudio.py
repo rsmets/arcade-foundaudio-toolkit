@@ -303,7 +303,7 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            SimilarityCritic(critic_field="search", weight=0.5),
+            BinaryCritic(critic_field="search", weight=0.5),
             SimilarityCritic(critic_field="genre", weight=0.5),
         ],
         additional_messages=[
