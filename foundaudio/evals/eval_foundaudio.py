@@ -198,7 +198,7 @@ def foundaudio_eval_suite() -> EvalSuite:
 
     suite.add_case(
         name="Audio Search with Empty Search Term",
-        user_message="Search for audio files with an empty search term",
+        user_message="Find all audio files for me",
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
