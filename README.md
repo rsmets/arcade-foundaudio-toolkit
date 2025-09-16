@@ -238,7 +238,7 @@ The toolkit includes comprehensive evaluation suites for testing tool performanc
 
 ```bash
 # Option 1: Using Makefile (recommended)
-make eval
+make evals
 
 # Option 2: Manual commands
 cd foundaudio/evals
