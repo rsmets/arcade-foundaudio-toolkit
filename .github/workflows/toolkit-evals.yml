@@ -1,4 +1,4 @@
-name: Run evals
+name: Toolkit evaluations
 
 permissions:
   contents: read
