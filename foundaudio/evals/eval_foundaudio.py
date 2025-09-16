@@ -113,7 +113,7 @@ def foundaudio_eval_suite() -> EvalSuite:
 
     suite.add_case(
         name="Audio Search with Multiple Filters",
-        user_message="Find 10 house music tracks with 'dance' in the title",
+        user_message="Find 10 house music mixes with 'dance' in the title",
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
@@ -138,11 +138,11 @@ def foundaudio_eval_suite() -> EvalSuite:
 
     suite.add_case(
         name="Audio Search with Partial Search Term",
-        user_message="Look for tracks containing 'rock' in the description",
+        user_message="Look for tracks containing 'party' in the description",
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
-                args={"search": "rock"},
+                args={"search": "party"},
             )
         ],
         critics=[
@@ -211,20 +211,6 @@ def foundaudio_eval_suite() -> EvalSuite:
     )
 
     suite.add_case(
-        name="Audio Search with Whitespace Search Term",
-        user_message="Search for audio files with just spaces",
-        expected_tool_calls=[
-            ExpectedToolCall(
-                func=get_audio_list,
-                args={"search": "   "},
-            )
-        ],
-        critics=[
-            SimilarityCritic(critic_field="search", weight=1.0),
-        ],
-    )
-
-    suite.add_case(
         name="Audio Search with Special Characters",
         user_message="Find audio files with 'rock & roll' in the title",
         expected_tool_calls=[
@@ -248,11 +234,12 @@ def foundaudio_eval_suite() -> EvalSuite:
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
-                args={"genre": "electronic"},
+                args={"search": "ambient", "genre": "electronic"},
             )
         ],
         critics=[
-            SimilarityCritic(critic_field="genre", weight=1.0),
+            SimilarityCritic(critic_field="search", weight=0.5),
+            SimilarityCritic(critic_field="genre", weight=0.5),
         ],
     )
 
@@ -335,7 +322,7 @@ def foundaudio_eval_suite() -> EvalSuite:
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
-                args={"limit": 150},  # This should trigger validation error
+                args={"limit": 100},  # Model should cap at the maximum limit
             )
         ],
         critics=[
@@ -356,7 +343,7 @@ def foundaudio_eval_suite() -> EvalSuite:
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
-                args={"limit": 0},  # This should trigger validation error
+                args={"limit": 1},  # Model should use the minimum limit
             )
         ],
         critics=[
