@@ -319,7 +319,7 @@ def foundaudio_eval_suite() -> EvalSuite:
     suite.add_case(
         name="Audio Search with Invalid Limit - Too High",
         user_message="Show me 150 audio files",
-        expected_tool_calls=[],
+        expected_tool_calls=[],  # None because RetryableToolError is raised
         critics=[],
     )
 
