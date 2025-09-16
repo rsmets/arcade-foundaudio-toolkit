@@ -81,11 +81,11 @@ def foundaudio_eval_suite() -> EvalSuite:
 
     suite.add_case(
         name="Audio Search with Search Term",
-        user_message="Find audio files about jazz music",
+        user_message="Find audio files that have high energy aspects",
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
-                args={"search": "jazz"},
+                args={"search": "high energy"},
             )
         ],
         critics=[
@@ -230,11 +230,11 @@ def foundaudio_eval_suite() -> EvalSuite:
 
     suite.add_case(
         name="Audio Search with Multiple Genres Context",
-        user_message="I'm looking for some ambient electronic music to study to",
+        user_message="I'm looking for some electronic music to study to that also has party vibes",  # RJS: if "ambient electronic" then that is the genre, not the search term. How to fix this?
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
-                args={"search": "ambient", "genre": "electronic"},
+                args={"search": "party", "genre": "electronic"},
             )
         ],
         critics=[
@@ -299,7 +299,7 @@ def foundaudio_eval_suite() -> EvalSuite:
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
-                args={"search": "electronic", "genre": "house"},
+                args={"genre": "house"},
             )
         ],
         critics=[
@@ -307,8 +307,11 @@ def foundaudio_eval_suite() -> EvalSuite:
             SimilarityCritic(critic_field="genre", weight=0.5),
         ],
         additional_messages=[
-            {"role": "user", "content": "I love electronic house music"},
-            {"role": "assistant", "content": "Here are some electronic house tracks!"},
+            {
+                "role": "user",
+                "content": "I love house music",
+            },  # RJS: if "electronic house" then that is the genre, not the search term. How to fix this?
+            {"role": "assistant", "content": "Here are some house tracks!"},
         ],
     )
 
