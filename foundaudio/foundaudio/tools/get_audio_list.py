@@ -29,7 +29,10 @@ def get_audio_list(
     limit: Annotated[
         Optional[int], "Number of audio files to return (default: 20, max: 100)"
     ] = 20,
-    search: Annotated[str, "Search term to filter by title or description"] = "",
+    search: Annotated[
+        str,
+        "Search term to filter by title or description. Provide an empty string to get all audio files.",
+    ] = "",
     genre: Annotated[Optional[str], "Genre to filter by"] = None,
 ) -> Dict[str, Any]:
     """Get a list of audio files from the Found Audio database.
