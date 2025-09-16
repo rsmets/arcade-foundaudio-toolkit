@@ -38,6 +38,9 @@ jobs:
           cd foundaudio
           make install
 
+      - name: Install Arcade TDK globally
+        run: uv pip install arcade-tdk
+
       - name: Setup Arcade credentials
         env:
           ARCADE_API_KEY: ${{ secrets.ArcadeApiKey }}
