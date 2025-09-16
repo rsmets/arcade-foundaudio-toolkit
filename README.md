@@ -238,7 +238,7 @@ The toolkit includes comprehensive evaluation suites for testing tool performanc
 
 ```bash
 # Option 1: Using Makefile (recommended)
-make eval
+make evals
 
 # Option 2: Manual commands
 cd foundaudio/evals
@@ -318,13 +318,9 @@ trunk fmt
 
 ### Manual Deployment
 
-```bash
+````bash
 # Deploy to Arcade's managed infrastructure
-uv run arcade deploy
-
-# Check deployment status
-uv run arcade deploy status
-```
+make deploy
 
 ### Automated Deployment
 
@@ -348,7 +344,7 @@ The project includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) 
 
    # Or create a GitHub release
    gh release create v0.1.0
-   ```
+````
 
 The workflow will automatically run `arcade deploy` and provide deployment status information.
 
