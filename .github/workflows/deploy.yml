@@ -38,13 +38,11 @@ jobs:
           cd foundaudio
           make install
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
+      - name: Install pipx
+        run: uv pip install pipx
 
-      - name: Install Arcade CLI globally
-        run: npm install -g arcade-cli
+      - name: Install Arcade TDK globally with pipx
+        run: pipx install arcade-tdk
 
       - name: Setup Arcade credentials
         env:
