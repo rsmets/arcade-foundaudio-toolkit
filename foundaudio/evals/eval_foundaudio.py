@@ -310,7 +310,7 @@ def foundaudio_eval_suite() -> EvalSuite:
             {
                 "role": "user",
                 "content": "I love house music",
-            },  # RJS: if "electronic house" then that is the genre, not the search term. How to fix this?
+            },  # if "electronic house" then that is the genre, not the search term. How to fix this?
             {"role": "assistant", "content": "Here are some house tracks!"},
         ],
     )
