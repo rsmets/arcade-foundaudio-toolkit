@@ -54,24 +54,8 @@ jobs:
 
       - name: Deploy to Arcade
         run: |
-          # Temporarily move .venv to avoid packaging issues
           cd foundaudio
-          if [ -d ".venv" ]; then
-            echo "Moving .venv directory temporarily..."
-            mv .venv ../.venv-temp
-          fi
-          cd ..
-
-          # Deploy from root directory using the moved venv
-          echo "Starting deployment with debug output..."
-          ./.venv-temp/bin/python -m arcade_cli.main deploy --deployment-file worker.toml --debug
-
-          # Restore .venv directory
-          cd foundaudio
-          if [ -d "../.venv-temp" ]; then
-            echo "Restoring .venv directory..."
-            mv ../.venv-temp .venv
-          fi
+          make deploy
 
       - name: Get deployment info
         run: |
