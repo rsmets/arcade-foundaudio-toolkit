@@ -1,0 +1,53 @@
+name: Run evals
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: |
+          cd foundaudio
+          make install
+
+      - name: Setup Arcade credentials
+        env:
+          ARCADE_API_KEY: ${{ secrets.ArcadeApiKey }}
+        run: |
+          # Create arcade credentials directory and file for API key auth
+          mkdir -p ~/.arcade
+          cat > ~/.arcade/credentials.yaml << EOF
+          cloud:
+            api:
+              key: $ARCADE_API_KEY
+            user:
+              email: rayjsmets@gmail.com
+          EOF
+
+      - name: Run evals
+        run: |
+          # Temporarily move .venv to avoid packaging issues
+          cd foundaudio
+          uv run arcade evals -h api.arcade.dev evals/eval_foundaudio.py

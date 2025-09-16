@@ -41,8 +41,3 @@ jobs:
         run: |
           cd foundaudio
           pytest tests/ -v --cov=foundaudio --cov-report=xml --cov-report=term-missing --cov-fail-under=80
-
-      - name: Run evals
-        run: |
-          cd foundaudio
-          arcade evals -h api.arcade.dev evals/eval_foundaudio.py
