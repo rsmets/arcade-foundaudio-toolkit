@@ -12,12 +12,6 @@ from arcade_tdk import ToolCatalog
 import foundaudio
 from foundaudio.tools.get_audio_list import get_audio_list
 
-
-# Safely clean text fields for critics
-def clean_text(text: str | None) -> str:
-    return str(text).lower() if text is not None else ""
-
-
 # Evaluation rubric with appropriate thresholds for audio search tool
 rubric = EvalRubric(
     fail_threshold=0.8,  # Slightly lower threshold for complex audio search scenarios
@@ -95,11 +89,7 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            SimilarityCritic(
-                critic_field="search",
-                weight=1.0,
-                cleaning_func=lambda s: clean_text(s),
-            ),
+            SimilarityCritic(critic_field="search", weight=1.0),
         ],
     )
 
@@ -113,11 +103,7 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            SimilarityCritic(
-                critic_field="genre",
-                weight=1.0,
-                cleaning_func=lambda s: clean_text(s),
-            ),
+            SimilarityCritic(critic_field="genre", weight=1.0),
         ],
     )
 
@@ -145,16 +131,8 @@ def foundaudio_eval_suite() -> EvalSuite:
                 value_range=(1, 100),
                 match_threshold=1.0,
             ),
-            SimilarityCritic(
-                critic_field="search",
-                weight=0.33,
-                cleaning_func=lambda s: clean_text(s),
-            ),
-            SimilarityCritic(
-                critic_field="genre",
-                weight=0.34,
-                cleaning_func=lambda s: clean_text(s),
-            ),
+            SimilarityCritic(critic_field="search", weight=0.33),
+            SimilarityCritic(critic_field="genre", weight=0.34),
         ],
     )
 
@@ -168,11 +146,7 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            SimilarityCritic(
-                critic_field="search",
-                weight=1.0,
-                cleaning_func=lambda s: clean_text(s),
-            ),
+            SimilarityCritic(critic_field="search", weight=1.0),
         ],
     )
 
@@ -246,11 +220,7 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            SimilarityCritic(
-                critic_field="search",
-                weight=1.0,
-                cleaning_func=lambda s: clean_text(s),
-            ),
+            SimilarityCritic(critic_field="search", weight=1.0),
         ],
     )
 
@@ -268,16 +238,8 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            SimilarityCritic(
-                critic_field="search",
-                weight=0.5,
-                cleaning_func=lambda s: clean_text(s),
-            ),
-            SimilarityCritic(
-                critic_field="genre",
-                weight=0.5,
-                cleaning_func=lambda s: clean_text(s),
-            ),
+            SimilarityCritic(critic_field="search", weight=0.5),
+            SimilarityCritic(critic_field="genre", weight=0.5),
         ],
     )
 
@@ -291,11 +253,7 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            SimilarityCritic(
-                critic_field="search",
-                weight=1.0,
-                cleaning_func=lambda s: clean_text(s),
-            ),
+            SimilarityCritic(critic_field="search", weight=1.0),
         ],
     )
 
@@ -327,11 +285,7 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            SimilarityCritic(
-                critic_field="genre",
-                weight=1.0,
-                cleaning_func=lambda s: clean_text(s),
-            ),
+            SimilarityCritic(critic_field="genre", weight=1.0),
         ],
         additional_messages=[
             {"role": "user", "content": "I'm looking for jazz music"},
@@ -349,16 +303,8 @@ def foundaudio_eval_suite() -> EvalSuite:
             )
         ],
         critics=[
-            SimilarityCritic(
-                critic_field="search",
-                weight=0.5,
-                cleaning_func=lambda s: clean_text(s),
-            ),
-            SimilarityCritic(
-                critic_field="genre",
-                weight=0.5,
-                cleaning_func=lambda s: clean_text(s),
-            ),
+            SimilarityCritic(critic_field="search", weight=0.5),
+            SimilarityCritic(critic_field="genre", weight=0.5),
         ],
         additional_messages=[
             {"role": "user", "content": "I love electronic house music"},
