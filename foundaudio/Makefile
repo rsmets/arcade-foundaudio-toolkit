@@ -38,6 +38,11 @@ bump-version: ## Bump the version in the pyproject.toml file by a patch version
 	@echo "🚀 Bumping version in pyproject.toml"
 	uv version --no-sources --bump patch
 
+.PHONY: evals
+evals: ## Run evaluation suite against Arcade Engine
+	@echo "🚀 Running evaluation suite"
+	@uv run --no-sources arcade evals -h api.arcade.dev evals/
+
 .PHONY: check
 check: ## Run code quality tools.
 	@if [ -f .pre-commit-config.yaml ]; then\
@@ -46,3 +51,33 @@ check: ## Run code quality tools.
 	fi
 	@echo "🚀 Static type checking: Running mypy"
 	@uv run --no-sources mypy --config-file=pyproject.toml
+
+.PHONY: deploy
+deploy: ## Deploy the toolkit to Arcade.dev worker
+	@echo "🚀 Deploying toolkit to Arcade.dev worker"
+	@echo "🗑️ Removing .venv folder to avoid deployment conflicts"
+	@if [ -d .venv ]; then \
+		rm -rf .venv; \
+		echo "✅ .venv folder removed"; \
+	fi
+	@echo "🚀 Running arcade deploy from project root"
+	@cd .. && arcade deploy || ( \
+		echo "❌ Deployment failed, recreating .venv folder..."; \
+		cd foundaudio && uv sync --active --all-extras --no-sources; \
+		echo "✅ .venv folder recreated"; \
+		exit 1; \
+	)
+	@echo "✅ Deployment completed successfully"
+	@echo "🔄 Recreating .venv folder..."
+	@cd foundaudio && uv sync --active --all-extras --no-sources
+	@echo "✅ .venv folder recreated"
+
+.PHONY: deploy-clean
+deploy-clean: ## Clean up .venv folder (useful for troubleshooting)
+	@echo "🧹 Cleaning up .venv folder"
+	@if [ -d .venv ]; then \
+		rm -rf .venv; \
+		echo "✅ .venv folder removed"; \
+	else \
+		echo "ℹ️  No .venv folder found to clean"; \
+	fi
