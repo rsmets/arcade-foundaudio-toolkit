@@ -244,7 +244,7 @@ make eval
 cd foundaudio/evals
 
 # Run all evaluations
-arcade evals .
+arcade evals -h api.arcade.dev .
 
 # Run specific evaluation files
 arcade evals -h api.arcade.dev eval_foundaudio.py  # Audio search tool only
