@@ -49,7 +49,7 @@ jobs:
       - name: Run evals
         run: |
           cd foundaudio
-          uv run arcade evals -h api.arcade.dev evals/eval_foundaudio.py | tee evals.log
+          uv run arcade evals --details -h api.arcade.dev evals/eval_foundaudio.py | tee evals.log
           if grep -iq "FAILED" evals.log; then
             echo "One or more evaluations failed."
             exit 1
