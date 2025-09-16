@@ -8,7 +8,7 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
-  deploy:
+  evaluations:
     runs-on: ubuntu-latest
 
     steps:
@@ -49,4 +49,8 @@ jobs:
       - name: Run evals
         run: |
           cd foundaudio
-          uv run arcade evals -h api.arcade.dev evals/eval_foundaudio.py
+          uv run arcade evals -h api.arcade.dev evals/eval_foundaudio.py | tee evals.log
+          if grep -q "FAILED" evals.log; then
+            echo "One or more evaluations failed."
+            exit 1
+          fi
