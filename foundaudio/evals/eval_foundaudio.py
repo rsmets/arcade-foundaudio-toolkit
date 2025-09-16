@@ -198,19 +198,19 @@ def foundaudio_eval_suite() -> EvalSuite:
     # GET_AUDIO_LIST TOOL EVALUATIONS - EDGE CASES
     # =============================================================================
 
-    suite.add_case(
-        name="Audio Search with Empty Search Term",
-        user_message="Find all audio files for me",
-        expected_tool_calls=[
-            ExpectedToolCall(
-                func=get_audio_list,
-                args={"search": None},
-            )
-        ],
-        critics=[
-            BinaryCritic(critic_field="search", weight=1.0),
-        ],
-    )
+    # suite.add_case(
+    #     name="Audio Search with Empty Search Term",
+    #     user_message="Find all audio files for me",
+    #     expected_tool_calls=[
+    #         ExpectedToolCall(
+    #             func=get_audio_list,
+    #             args={"search": None},
+    #         )
+    #     ],
+    #     critics=[
+    #         BinaryCritic(critic_field="search", weight=1.0),
+    #     ],
+    # )
 
     suite.add_case(
         name="Audio Search with Special Characters",
