@@ -1,3 +1,5 @@
+from tkinter import N
+
 from arcade_evals import (
     BinaryCritic,
     EvalRubric,
@@ -202,7 +204,7 @@ def foundaudio_eval_suite() -> EvalSuite:
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
-                args={"search": ""},
+                args={"search": None},
             )
         ],
         critics=[
@@ -299,7 +301,7 @@ def foundaudio_eval_suite() -> EvalSuite:
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
-                args={"genre": "house", "search": ""},
+                args={"genre": "house", "search": None},
             )
         ],
         critics=[
