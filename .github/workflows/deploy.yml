@@ -39,7 +39,7 @@ jobs:
           make install
 
       - name: Install pipx
-        run: uv pip install pipx
+        run: uv pip install --system pipx
 
       - name: Install Arcade TDK globally with pipx
         run: pipx install arcade-tdk
