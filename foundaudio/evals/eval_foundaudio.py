@@ -230,7 +230,7 @@ def foundaudio_eval_suite() -> EvalSuite:
 
     suite.add_case(
         name="Audio Search with Multiple Genres Context",
-        user_message="I'm looking for some electronic music to study to that also has party vibes",  # RJS: if "ambient electronic" then that is the genre, not the search term. How to fix this?
+        user_message="I'm looking for some electronic music to study to that also has party vibes",
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
@@ -299,7 +299,7 @@ def foundaudio_eval_suite() -> EvalSuite:
         expected_tool_calls=[
             ExpectedToolCall(
                 func=get_audio_list,
-                args={"genre": "house"},
+                args={"genre": "house", "search": ""},
             )
         ],
         critics=[
