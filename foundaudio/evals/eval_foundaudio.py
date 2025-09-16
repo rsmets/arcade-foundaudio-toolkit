@@ -1,5 +1,3 @@
-from tkinter import N
-
 from arcade_evals import (
     BinaryCritic,
     EvalRubric,
