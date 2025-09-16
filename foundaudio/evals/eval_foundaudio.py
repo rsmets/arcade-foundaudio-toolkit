@@ -326,7 +326,12 @@ def foundaudio_eval_suite() -> EvalSuite:
     suite.add_case(
         name="Audio Search with Invalid Limit - Too Low",
         user_message="Show me 0 audio files",
-        expected_tool_calls=[],  # None because RetryableToolError is raised
+        expected_tool_calls=[
+            ExpectedToolCall(
+                func=get_audio_list,
+                args={"search": "electronic", "genre": "house"},
+            )
+        ],
         critics=[],
     )
 
