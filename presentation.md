@@ -42,6 +42,7 @@ Evals
 
 - Metalinting with Trunk was done for every commit and push. Also confirmed in CI.
 - Enforcing pull request repository rules with required CI test and eval status checks
+  - RFC: Should evals really be run in CI due to the inherently non-deterministic outcomes?
   - Leveraging Cursor's latest feature release, commands, was useful
 - Encouraging proper use of semver versioning with the deploy CI/CD job
 
