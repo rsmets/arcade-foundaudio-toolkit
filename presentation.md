@@ -38,10 +38,11 @@ Evals
 
 ---
 
-### Gitops Workflow
+### Development & Gitops Workflow
 
 - Metalinting with Trunk was done for every commit and push. Also confirmed in CI.
 - Enforcing pull request repository rules with required CI test and eval status checks
+  - Leveraging Cursor's latest feature release, commands, was useful
 - Encouraging proper use of semver versioning with the deploy CI/CD job
 
 ---
