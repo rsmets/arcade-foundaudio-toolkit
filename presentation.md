@@ -56,8 +56,9 @@ I will show off the agent app in a moment, but first, let's look at the toolkit 
 
 ## Toolkit development feedback
 
-- Offering a toolkit dev kit in Typescript would have helped me personally
 - Information around `arcade evals` was not very clear. I feel it should default to the remote eval server, api.arcade.dev
+- `arcade deploy` should deal with the `.venv` dir itself instead pushing to the user
+- Offering a toolkit dev kit in Typescript would have greatly helped me personally
 - Providing official Arcade Github actions would have been helpful for the gitops workflows
   - Having the scaffolding come with Github workflows would be nice
   - Allowing passing of apiKey directly to `arcade login` would have also helped
