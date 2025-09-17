@@ -15,7 +15,7 @@ The [Found Audio](https://foundaudio.club) search API was chosen specifically fo
 
 ### Toolkit Design
 
-This toolkit follows MCP design best practices[1](https://liquidmetal.ai/casesAndBlogs/mcp-api-wrapper-antipattern/)[2](https://vercel.com/blog/the-second-wave-of-mcp-building-for-llms-not-developers) that avoid common API wrapper antipatterns:
+This toolkit follows MCP design best practices[1](https://liquidmetal.ai/casesAndBlogs/mcp-api-wrapper-antipattern/)[2](https://vercel.com/blog/the-second-wave-of-mcp-building-for-llms-not-developers), particularly to avoid common API wrapper anti-patterns.
 
 #### Design Principles
 

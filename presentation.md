@@ -56,10 +56,12 @@ I will show off the agent app in a moment, but first, let's look at the toolkit 
 ## Toolkit development feedback
 
 - Offering a toolkit dev kit in Typescript would have helped me personally
-- Information around running evals was not very clear. I feel it should default to the remote eval server, api.arcade.dev
-- Providing Github actions would have helpful for the gitops workflows
+- Information around `arcade evals` was not very clear. I feel it should default to the remote eval server, api.arcade.dev
+- Providing official Arcade Github actions would have been helpful for the gitops workflows
+  - Having the scaffolding come with Github workflows would be nice
   - Allowing passing of apiKey directly to `arcade login` would have also helped
-- Providing an official MCP documentation server is a nice touch
+- Providing an official MCP documentation server would be a nice touch
   - Providing a session based getting started guide/walk through I think would also help others
+- Thank you for [improving](https://github.com/ArcadeAI/docs/pull/445) the documentation's terminology consistency. 😃
 
 ---
