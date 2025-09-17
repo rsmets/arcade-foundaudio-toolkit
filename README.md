@@ -220,22 +220,11 @@ with patch('foundaudio.tools.get_audio_list.create_client') as mock_client:
 
 ## Evaluation
 
-The toolkit includes comprehensive evaluation suites for testing tool performance and AI assistant behavior. The evaluation suites are located in the `foundaudio/evals/` directory:
-
-- `eval_foundaudio.py` - Audio search tool evaluations
-- `eval_hello.py` - Hello tool evaluations
+The toolkit includes comprehensive evaluation suites for testing tool performance and AI assistant behavior. The evaluation suites are located in the `foundaudio/evals/` directory.
 
 ### Evaluation Categories
 
-#### 1. **Hello Tool Evaluations** (`eval_hello.py`)
-
-- Simple greeting scenarios
-- Contextual greetings with conversation history
-- Name extraction and parameter passing
-- Edge cases (empty names, special characters)
-- Multi-turn conversation flow
-
-#### 2. **Audio Search Tool Evaluations** (`eval_foundaudio.py`)
+Audio Search Tool Evaluations [`eval_foundaudio.py`](./foundaudio/evals/eval_foundaudio.py)
 
 - **Basic Functionality**: No filters, limit parameters, search terms, genre filters
 - **Combined Filters**: Multiple parameter combinations (limit + search + genre)
@@ -245,7 +234,7 @@ The toolkit includes comprehensive evaluation suites for testing tool performanc
 - **Conversation Context**: Multi-turn conversations with user preferences
 - **Error Scenarios**: Invalid parameter handling
 
-#### 3. **Critic Types Used**
+#### **Critic Types Used**
 
 - `BinaryCritic`: Exact parameter matching
 - `SimilarityCritic`: Semantic similarity for search terms and genres
