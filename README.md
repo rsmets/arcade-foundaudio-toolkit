@@ -15,7 +15,7 @@ The [Found Audio](https://foundaudio.club) search API was chosen specifically fo
 
 ### Toolkit Design
 
-This toolkit follows MCP design best practices[1](https://liquidmetal.ai/casesAndBlogs/mcp-api-wrapper-antipattern/)[2](https://vercel.com/blog/the-second-wave-of-mcp-building-for-llms-not-developers), particularly to avoid common API wrapper anti-patterns.
+This toolkit follows MCP design best practices [[1]](https://liquidmetal.ai/casesAndBlogs/mcp-api-wrapper-antipattern/) [[2]](https://vercel.com/blog/the-second-wave-of-mcp-building-for-llms-not-developers), particularly to avoid common API wrapper anti-patterns.
 
 #### Design Principles
 
@@ -23,10 +23,10 @@ This toolkit follows MCP design best practices[1](https://liquidmetal.ai/casesAn
    - Focus on user workflows rather than individual API endpoints
    - Map what users actually want to accomplish with the service
    - Handle complexity internally (name resolution or ambiguity)
-   - Example: "Search for audio files by Fidelio" makes multiple API calls but still only uses a single tool. Let's the LLM focus on the actual task instead of system integration
+   - Example: "Search for audio files by Fidelio" makes multiple API calls but still only uses a single tool. Let the LLM focus on the actual task instead of system integration
 
 2. **Design Responses for Language Models**
-   - Return structured, parseable information
+   - Return structured, concise information
    - Skip unnecessary data that clutters AI agent context
    - Focus on what the LLM needs to complete the task
 
@@ -65,8 +65,8 @@ I really wanted to make a complex toolkit that would require OAuth to interface 
 - **[Trunk](https://trunk.io/)** - [Metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce standards and best practices. It should just work thanks to the [Launcher](https://docs.trunk.io/code-quality/setup-and-installation/initialize-trunk#the-trunk-launcher) however, it might require a separate install (I was not able to verify; I have it globally on my machine)
 - **[GitHub Actions](https://docs.github.com/en/actions)** - Continuous integration
 - **[Zed](https://zed.dev/)** and **[Cursor](https://cursor.com/agents)** text editors were used with a variety of foundation models to assist in authoring this toolkit
-- Cursor rules and commands (once [released](https://cursor.com/changelog) Sept 11th)
-- Arcade documentation MCP server (and embeddings) created and hosted with [Ref](https://ref.tools/dashboard)
+- Cursor rules and commands ([released](https://cursor.com/changelog) Sept 11th)
+- Arcade documentation MCP server (and vector embeddings) created and hosted with [Ref](https://ref.tools/dashboard)
 
 ## 🏗️ File System Layout
 
@@ -300,7 +300,7 @@ uv run arcade serve --reload
 ### 2. Code Quality
 
 ```bash
-# Manual linting; However, this happens as trigger via the Trunk actions
+# Manual linting; However, this happens automatically via git hooks and are run in CI
 trunk check
 trunk fmt
 ```
@@ -308,8 +308,7 @@ trunk fmt
 ### 3. Testing Locally
 
 ```bash
-# Test like CI
-./scripts/test-ci-locally.sh
+make tests
 ```
 
 ## 📚 Additional Resources
@@ -332,9 +331,10 @@ trunk fmt
 
 ### Manual Deployment
 
-````bash
+```bash
 # Deploy to Arcade's managed infrastructure
 make deploy
+```
 
 ### Automated Deployment
 
@@ -358,11 +358,11 @@ The project includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) 
 
    # Or create a GitHub release
    gh release create v0.1.0
-````
+   ```
 
 The workflow will automatically run `arcade deploy` and provide deployment status information.
 
-See [Arcade's deployment documentation](https://docs.arcade.dev/home/serve-tools/arcade-deploy) for comprehensive deployment options including Docker, Modal, and other hosting platforms.
+See [Arcade's deployment documentation](https://docs.arcade.dev/home/serve-tools/arcade-deploy) for more information along with the `deploy` usage [guide](https://docs.arcade.dev/home/arcade-cli#arcade-deploy).
 
 ## 🤝 Development Philosophy
 
@@ -414,3 +414,7 @@ With the solid foundation established, future enhancements could include:
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+```
+
+```

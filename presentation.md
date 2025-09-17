@@ -42,7 +42,7 @@ Evals
 
 - Metalinting with Trunk was done for every commit and push. Also confirmed in CI.
 - Enforcing pull request repository rules with required CI test and eval status checks
-  - RFC: Should evals really be run in CI due to the inherently non-deterministic outcomes?
+  - _RFC: Should evals really be run in CI due to the inherently non-deterministic outcomes?_
   - Leveraging Cursor's latest feature release, commands, was useful
 - Encouraging proper use of semver versioning with the deploy CI/CD job
 
@@ -50,7 +50,9 @@ Evals
 
 ## Demo
 
-I will show off the agent app in a moment, but first, let's look at the toolkit [in action](https://api.arcade.dev/dashboard/playground/chat)
+I will show off the agent app in a moment, but first, let's look at the toolkit [in action](https://api.arcade.dev/dashboard/playground/chat).
+
+_Did you use AG-UI for the Arcade dashboard chat interface?_
 
 ---
 
@@ -67,3 +69,8 @@ I will show off the agent app in a moment, but first, let's look at the toolkit 
 - Thank you for [improving](https://github.com/ArcadeAI/docs/pull/445) the documentation's terminology consistency. 😃
 
 ---
+
+## Thank you
+
+- It was a fun assessment project!
+- Thank you for being available to answer questions in email, issues, and PR reviews for the Mastra example and docs updates.
