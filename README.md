@@ -135,6 +135,7 @@ Searches the Found Audio database with filtering and pagination.
 - `limit` (int, optional): Number of results (1-100, default: 20)
 - `search` (str, optional): Search term for title/description
 - `genre` (str, optional): Filter by genre
+- `username` (str, optional): Filter by specific user's audio files
 
 **Example Usage:**
 
@@ -144,6 +145,12 @@ result = get_audio_list(limit=5)
 
 # Search with filters
 result = get_audio_list(search="pool", genre="House", limit=10)
+
+# Get audio files from a specific user
+result = get_audio_list(username="discodude", limit=10)
+
+# Combine username with other filters
+result = get_audio_list(username="discodude", search="house", genre="electronic", limit=5)
 ```
 
 **Returns:** List of audio file dictionaries with metadata including:
