@@ -2,15 +2,15 @@
 
 > An example [Arcade.dev](https://arcade.dev) toolkit demonstrating professional software development practices with a simple audio database API as requested in the take-home [assignment](ArcadeEngineeringInterviewProject.pdf). The downstream usage of this toolkit can be found the [arcade-mastra-agent](https://github.com/rsmets/arcade-mastra-agent) repo.
 
-## 🎯 Project Goals
+## Project Goals
 
 This project demonstrates how I approach software development by building a [toolkit](https://docs.arcade.dev/home/build-tools/create-a-toolkit) with professional software development standards practices:
 
-1. **🏗️ Foundation First**: Establish solid development practices before adding higher-level features/tools.
-2. **🧪 Test-Driven**: Comprehensive test coverage with proper mocking and validation
-3. **🔧 Tooling**: Metalinting via [Trunk](https://docs.trunk.io/code-quality/overview) (more comprehensive than what the scaffolding provided), tests, evals, and deployments run via standard trunk-based development gitops workflows via CI/CD). Text editor commands and rules to assist with common workflows (Cursor commands and rules).
-4. **📚 Documentation**: Comprehensive Readme with verbose inline comments
-5. **🚀 Production Readiness**: Comprehensive evaluation suites to ensure tool performance and AI assistant behavior. Automated deployment pipelines based on trunk-based GitOps practices.
+1. **Foundation First**: Establish solid development practices before adding higher-level features/tools.
+2. **Test-Driven**: Comprehensive test coverage with proper mocking and validation
+3. **Tooling**: Metalinting via [Trunk](https://docs.trunk.io/code-quality/overview) (more comprehensive than what the scaffolding provided), tests, evals, and deployments run via standard trunk-based development gitops workflows via CI/CD). Text editor commands and rules to assist with common workflows (Cursor commands and rules).
+4. **Documentation**: Comprehensive Readme with verbose inline comments
+5. **Production Readiness**: Comprehensive evaluation suites to ensure tool performance and AI assistant behavior. Automated deployment pipelines based on trunk-based GitOps practices.
 
 ### Integration
 
@@ -50,7 +50,7 @@ Our [`get_audio_list`](./foundaudio/foundaudio/tools/get_audio_list.py) tool dem
 - **Intelligent Error Handling**: Clear validation messages with specific parameter guidance
 - **Structured Responses**: Clean data models that AI agents can easily work with
 
-## 🛠️ Tools
+## Tools
 
 ### Core Framework
 
@@ -71,7 +71,7 @@ Our [`get_audio_list`](./foundaudio/foundaudio/tools/get_audio_list.py) tool dem
 - Cursor rules and commands ([released](https://cursor.com/changelog) Sept 11th)
 - Arcade documentation MCP server (and vector embeddings) created and hosted with [Ref](https://ref.tools/dashboard)
 
-## 🏗️ File System Layout
+## File System Layout
 
 ```text
 foundaudio/
@@ -90,7 +90,7 @@ foundaudio/
     └── test-ci-locally.sh
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -122,7 +122,7 @@ uv run arcade serve --reload
 
 Follow along the Arcade.dev [documentation](https://docs.arcade.dev/home/build-tools/create-a-toolkit#connect-your-toolkit-to-the-arcade-engine) on how to port-forward your local instance for testing the tool calling within the Arcade.dev dashboard.
 
-## 🔧 Tools Available
+## Tools Available
 
 For the sake of time and simplicity, I opted not to invest effort into more than one tool call.
 
@@ -169,9 +169,9 @@ result = get_audio_list(username="discodude", search="house", genre="electronic"
 }
 ```
 
-## 🔐 Secret Management
+## Secret Management
 
-This toolkit demonstrates [Arcade's secret management](https://docs.arcade.dev/home/build-tools/create-a-tool-with-secrets) system via [ToolContext](https://docs.arcade.dev/home/build-tools/tool-context). _Please reference the Arcade.dev documentation for information on how to set the `SUPABASE_ANON_KEY` Tool secret in your dashboard._:
+This toolkit demonstrates [Arcade's secret management](https://docs.arcade.dev/home/build-tools/create-a-tool-with-secrets) system via [ToolContext](https://docs.arcade.dev/home/build-tools/tool-context). _Please reference the Arcade.dev documentation on how to set the `SUPABASE_ANON_KEY` Tool secret in your dashboard._:
 
 ```python
 @tool(requires_secrets=["SUPABASE_ANON_KEY"])
@@ -181,7 +181,7 @@ def get_audio_list(context: ToolContext, ...):
 
 **Note:** The Supabase [anonymous key](https://supabase.com/docs/guides/api/api-keys#anon-and-publishable-keys) is actually public, but this demonstrates proper secret handling patterns for truly sensitive credentials.
 
-## 🧪 Testing Strategy
+## Testing Strategy
 
 ### Running Tests
 
@@ -218,7 +218,7 @@ with patch('foundaudio.tools.get_audio_list.create_client') as mock_client:
     assert isinstance(result, str)
 ```
 
-## 📊 Evaluation
+## Evaluation
 
 The toolkit includes comprehensive evaluation suites for testing tool performance and AI assistant behavior. The evaluation suites are located in the `foundaudio/evals/` directory:
 
@@ -285,7 +285,7 @@ This comprehensive evaluation suite ensures the AI assistant correctly:
 
 _Note: The `say_hello` tool is included for baseline testing and can be removed in production deployments._
 
-## 🔄 Development Workflow
+## Development Workflow
 
 ### 1. Local Development
 
@@ -314,7 +314,7 @@ trunk fmt
 make tests
 ```
 
-## 📚 Additional Resources
+## Additional Resources
 
 ### Arcade.dev Documentation
 
@@ -330,7 +330,7 @@ make tests
 - **[pytest Documentation](https://docs.pytest.org/)** - Testing framework
 - **[Supabase Python Client](https://supabase.com/docs/reference/python)** - Database integration
 
-## 🚀 Production Deployment
+## Production Deployment
 
 ### Manual Deployment
 
@@ -367,10 +367,6 @@ The workflow will automatically run `arcade deploy` and provide deployment statu
 
 See [Arcade's deployment documentation](https://docs.arcade.dev/home/serve-tools/arcade-deploy) for more information along with the `deploy` usage [guide](https://docs.arcade.dev/home/arcade-cli#arcade-deploy).
 
-## 🤝 Development Philosophy
-
-This project exemplifies my approach to software development:
-
 ## 🏆 Outcome
 
 I feel all of the [project goals](#-project-goals) were achieved. I was able to successfully deploy my worker to Arcade.dev using Cloudflare and test via the dashboard tool calling interface.
@@ -380,7 +376,7 @@ Secret: `<default suggestion>`
 
 _It is unclear to me the best way to provide the information necessary for others to interface with this toolkit... the [deploy documentation](https://docs.arcade.dev/home/serve-tools/arcade-deploy) does not include information on this._
 
-## 📈 Next Steps
+## Next Steps
 
 With the solid foundation established, future enhancements could include:
 
@@ -389,7 +385,7 @@ With the solid foundation established, future enhancements could include:
 - **Caching Layer** - To prevent having to call the external API all the time
 - **Monitoring** - Metrics, observability, alerting
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
