@@ -128,7 +128,7 @@ For the sake of time and simplicity, I opted not to invest effort into more than
 
 ### 1. Get Audio List (`get_audio_list`)
 
-Searches the Found Audio database with filtering and pagination. Now supports username-based filtering to get audio files from specific users.
+Searches the Found Audio database with filtering and pagination.
 
 **Parameters:**
 

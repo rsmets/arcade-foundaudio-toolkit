@@ -29,13 +29,14 @@ def foundaudio_eval_suite() -> EvalSuite:
 
     This evaluation suite tests the get_audio_list tool with various scenarios
     including basic functionality, filtering, parameter validation, edge cases,
-    and error handling.
+    error handling, and username-based search functionality.
     """
     suite = EvalSuite(
         name="Found Audio Search Tool Evaluation Suite",
         system_message=(
             "You are an AI assistant with access to foundaudio tools. "
-            "You can search for audio files using various filters. Use the "
+            "You can search for audio files using various filters including "
+            "search terms, genres, limits, and usernames. Use the "
             "get_audio_list tool to help users find audio content."
         ),
         catalog=catalog,
@@ -314,6 +315,169 @@ def foundaudio_eval_suite() -> EvalSuite:
             },  # if "electronic house" then that is the genre, not the search term. How to fix this?
             {"role": "assistant", "content": "Here are some house tracks!"},
         ],
+    )
+
+    # =============================================================================
+    # GET_AUDIO_LIST TOOL EVALUATIONS - USERNAME-BASED SEARCH
+    # =============================================================================
+
+    suite.add_case(
+        name="Audio Search by Username - Basic",
+        user_message="Show me audio files from user 'discodude'",
+        expected_tool_calls=[
+            ExpectedToolCall(
+                func=get_audio_list,
+                args={"username": "discodude"},
+            )
+        ],
+        critics=[
+            SimilarityCritic(critic_field="username", weight=1.0),
+        ],
+    )
+
+    suite.add_case(
+        name="Audio Search by Username with Limit",
+        user_message="Show me 5 audio files from user 'discodude'",
+        expected_tool_calls=[
+            ExpectedToolCall(
+                func=get_audio_list,
+                args={"username": "discodude", "limit": 5},
+            )
+        ],
+        critics=[
+            SimilarityCritic(critic_field="username", weight=0.5),
+            NumericCritic(
+                critic_field="limit",
+                weight=0.5,
+                value_range=(1, 100),
+                match_threshold=1.0,
+            ),
+        ],
+    )
+
+    suite.add_case(
+        name="Audio Search by Username with Search Term",
+        user_message="Find music with 'party' in the description from user 'discodude'",
+        expected_tool_calls=[
+            ExpectedToolCall(
+                func=get_audio_list,
+                args={"username": "discodude", "search": "party"},
+            )
+        ],
+        critics=[
+            SimilarityCritic(critic_field="username", weight=0.5),
+            SimilarityCritic(critic_field="search", weight=0.5),
+        ],
+    )
+
+    suite.add_case(
+        name="Audio Search by Username with Genre Filter",
+        user_message="Show me electronic tracks from user 'discodude'",
+        expected_tool_calls=[
+            ExpectedToolCall(
+                func=get_audio_list,
+                args={"username": "discodude", "genre": "electronic"},
+            )
+        ],
+        critics=[
+            SimilarityCritic(critic_field="username", weight=0.5),
+            SimilarityCritic(critic_field="genre", weight=0.5),
+        ],
+    )
+
+    suite.add_case(
+        name="Audio Search by Username with All Filters",
+        user_message="Find 10 house music tracks with 'dance' in the title from user 'discodude'",
+        expected_tool_calls=[
+            ExpectedToolCall(
+                func=get_audio_list,
+                args={
+                    "username": "discodude",
+                    "limit": 10,
+                    "search": "dance",
+                    "genre": "house",
+                },
+            )
+        ],
+        critics=[
+            SimilarityCritic(critic_field="username", weight=0.25),
+            NumericCritic(
+                critic_field="limit",
+                weight=0.25,
+                value_range=(1, 100),
+                match_threshold=1.0,
+            ),
+            SimilarityCritic(critic_field="search", weight=0.25),
+            SimilarityCritic(critic_field="genre", weight=0.25),
+        ],
+    )
+
+    suite.add_case(
+        name="Audio Search by Username - Case Sensitivity",
+        user_message="Show me audio files from user 'DISCODUDE'",
+        expected_tool_calls=[
+            ExpectedToolCall(
+                func=get_audio_list,
+                args={"username": "DISCODUDE"},
+            )
+        ],
+        critics=[
+            SimilarityCritic(critic_field="username", weight=1.0),
+        ],
+    )
+
+    suite.add_case(
+        name="Audio Search by Username - Artist Discovery Context",
+        user_message="What kind of music does 'discodude' make? Show me their tracks",
+        expected_tool_calls=[
+            ExpectedToolCall(
+                func=get_audio_list,
+                args={"username": "discodude"},
+            )
+        ],
+        critics=[
+            SimilarityCritic(critic_field="username", weight=1.0),
+        ],
+    )
+
+    suite.add_case(
+        name="Audio Search by Username - Specific Genre from User",
+        user_message="Does 'discodude' have any electronic music?",
+        expected_tool_calls=[
+            ExpectedToolCall(
+                func=get_audio_list,
+                args={"username": "discodude", "genre": "electronic"},
+            )
+        ],
+        critics=[
+            SimilarityCritic(critic_field="username", weight=0.5),
+            SimilarityCritic(critic_field="genre", weight=0.5),
+        ],
+    )
+
+    # =============================================================================
+    # GET_AUDIO_LIST TOOL EVALUATIONS - USERNAME ERROR SCENARIOS
+    # =============================================================================
+
+    suite.add_case(
+        name="Audio Search with Empty Username",
+        user_message="Show me audio files from user ''",
+        expected_tool_calls=[],  # None because RetryableToolError is raised
+        critics=[],
+    )
+
+    suite.add_case(
+        name="Audio Search with Whitespace Username",
+        user_message="Show me audio files from user '   '",
+        expected_tool_calls=[],  # None because RetryableToolError is raised
+        critics=[],
+    )
+
+    suite.add_case(
+        name="Audio Search with Non-existent Username",
+        user_message="Show me audio files from user 'nonexistentuser123'",
+        expected_tool_calls=[],  # None because RetryableToolError is raised
+        critics=[],
     )
 
     # =============================================================================
