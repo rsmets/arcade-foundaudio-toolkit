@@ -342,7 +342,7 @@ See [Arcade's deployment documentation](https://docs.arcade.dev/home/serve-tools
 
 ## 🏆 Outcome
 
-I feel all of the [project goals](#-project-goals) were achieved. I was able to successfully deploy my worker to Arcade.dev using Cloudflare and test via the dashboard tool calling interface.
+I feel all of the [project goals](#project-goals) were achieved. I was able to successfully deploy my worker to Arcade.dev using Cloudflare and test via the dashboard tool calling interface.
 
 Worker URI: `https://e58rbgi8n1svd5mpt8rxtr316-1972021761134002131.server.arcade.dev`
 Secret: `<default suggestion>`
