@@ -8,7 +8,7 @@ This project demonstrates how I approach software development by building a [too
 
 1. **🏗️ Foundation First**: Establish solid development practices before adding higher-level features/tools.
 2. **🧪 Test-Driven**: Comprehensive test coverage with proper mocking and validation
-3. **🔧 Tooling**: Modern Python tooling (uv, pytest, metalinting via [Trunk](https://docs.trunk.io/code-quality/overview) (more comprehensive than what the scaffolding provided), tests, evals, and deployments run via standard trunk-based development gitops workflows via CI/CD). Text editor commands and rules to assist with common workflows (Cursor commands and rules).
+3. **🔧 Tooling**: Metalinting via [Trunk](https://docs.trunk.io/code-quality/overview) (more comprehensive than what the scaffolding provided), tests, evals, and deployments run via standard trunk-based development gitops workflows via CI/CD). Text editor commands and rules to assist with common workflows (Cursor commands and rules).
 4. **📚 Documentation**: Comprehensive Readme with verbose inline comments
 
 ### Integration
@@ -125,7 +125,7 @@ Follow along the Arcade.dev [documentation](https://docs.arcade.dev/home/build-t
 
 For the sake of time and simplicity, I opted not to invest effort into more than one tool call.
 
-### 1. Get Audio List (`get_audio_list`)
+### 1. Get Audio List, [`get_audio_list`](./foundaudio/foundaudio/tools/get_audio_list.py)
 
 Searches the Found Audio database with filtering and pagination.
 
@@ -203,7 +203,7 @@ uv run pytest tests/test_get_audio_list.py::test_get_audio_list_basic -v
 1. **Unit Tests** - Individual function testing with mocking
 2. **Validation Tests** - Input parameter validation
 3. **Error Handling** - Exception and error case testing
-4. **Evaluations (~Integration Tests)** - Real API and LLM interaction tests
+4. **Evaluations (~E2E Tests)** - Real API and LLM interaction tests
 
 ### Key Testing Patterns
 
