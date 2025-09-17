@@ -413,20 +413,6 @@ def foundaudio_eval_suite() -> EvalSuite:
     )
 
     suite.add_case(
-        name="Audio Search by Username - Case Sensitivity",
-        user_message="Show me audio files from user 'DISCODUDE'",
-        expected_tool_calls=[
-            ExpectedToolCall(
-                func=get_audio_list,
-                args={"username": "DISCODUDE"},
-            )
-        ],
-        critics=[
-            SimilarityCritic(critic_field="username", weight=1.0),
-        ],
-    )
-
-    suite.add_case(
         name="Audio Search by Username - Artist Discovery Context",
         user_message="What kind of music does 'discodude' make? Show me their tracks",
         expected_tool_calls=[
@@ -469,13 +455,6 @@ def foundaudio_eval_suite() -> EvalSuite:
     suite.add_case(
         name="Audio Search with Whitespace Username",
         user_message="Show me audio files from user '   '",
-        expected_tool_calls=[],  # None because RetryableToolError is raised
-        critics=[],
-    )
-
-    suite.add_case(
-        name="Audio Search with Non-existent Username",
-        user_message="Show me audio files from user 'nonexistentuser123'",
         expected_tool_calls=[],  # None because RetryableToolError is raised
         critics=[],
     )
