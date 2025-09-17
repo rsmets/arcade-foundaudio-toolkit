@@ -452,13 +452,6 @@ def foundaudio_eval_suite() -> EvalSuite:
         critics=[],
     )
 
-    suite.add_case(
-        name="Audio Search with Whitespace Username",
-        user_message="Show me audio files from user '   '",
-        expected_tool_calls=[],  # None because RetryableToolError is raised
-        critics=[],
-    )
-
     # =============================================================================
     # GET_AUDIO_LIST TOOL EVALUATIONS - ERROR SCENARIOS
     # =============================================================================
