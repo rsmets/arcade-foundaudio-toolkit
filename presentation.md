@@ -14,7 +14,7 @@ Agenda
 
 ## README
 
-The README.md has most of the important details I want to touch on. Let's go there.
+The [README](./README.md) has most of the important details I want to touch on. Let's go there.
 
 ---
 
@@ -24,65 +24,41 @@ The README.md has most of the important details I want to touch on. Let's go the
 
 Tool
 
-- intent-based implementation
-- use of context for secret management
-- graceful error handling with RetryableToolError
-
-Evals
-
-- fairly extensive scenarios of how one would interface with the tool
+- Intent-based implementation
+- Use of context for secret management
+- Graceful error handling with RetryableToolError
 
 Tests
 
-- unit tests to cover sanity checks
+- Unit tests with external mocks to cover normal operation, input validation (e.g., limit boundaries), and error handling (e.g., missing secrets).
+
+Evals
+
+- Fairly extensive scenarios of how one would interface with the tool
+
+---
+
+### Gitops Workflow
+
+- Metalinting with Trunk was done for every commit and push. Also confirmed in CI.
+- Enforcing pull request repository rules with required CI test and eval status checks
+- Encouraging proper use of semver versioning with the deploy CI/CD job
 
 ---
 
 ## Demo
 
-I will show off the agent app in a moment, but first, here is just the toolkit in action:
-https://api.arcade.dev/dashboard/playground/chat
+I will show off the agent app in a moment, but first, let's look at the toolkit [in action](https://api.arcade.dev/dashboard/playground/chat)
 
 ---
 
 ## Toolkit development feedback
 
-```go
-package main
-
-import "fmt"
-
-func main() {
-  fmt.Println("Execute code directly inside the slides")
-}
-```
-
-You can execute code inside your slides by pressing `<C-e>`,
-the output of your command will be displayed at the end of the current slide.
+- Offering a toolkit dev kit in Typescript would have helped me personally
+- Information around running evals was not very clear. I feel it should default to the remote eval server, api.arcade.dev
+- Providing Github actions would have helpful for the gitops workflows
+  - Allowing passing of apiKey directly to `arcade login` would have also helped
+- Providing an official MCP documentation server is a nice touch
+  - Providing a session based getting started guide/walk through I think would also help others
 
 ---
-
-## Pre-process slides
-
-You can add a code block with three tildes (`~`) and write a command to run _before_ displaying
-the slides, the text inside the code block will be passed as `stdin` to the command
-and the code block will be replaced with the `stdout` of the command.
-
-```
-~~~graph-easy --as=boxart
-[ A ] - to -> [ B ]
-~~~
-```
-
-The above will be pre-processed to look like:
-
-┌───┐ to ┌───┐
-│ A │ ────> │ B │
-└───┘ └───┘
-
-For security reasons, you must pass a file that has execution permissions
-for the slides to be pre-processed. You can use `chmod` to add these permissions.
-
-```bash
-chmod +x file.md
-```
