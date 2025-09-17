@@ -87,6 +87,7 @@ def get_audio_list(
         supabase = create_client(supabase_url, supabase_key)
 
         # Look up user ID if username is provided
+        # NOTE: This is where some complexity of dealing with intent-based implementation comes in
         user_id = None
         if username and username.strip():
             try:
