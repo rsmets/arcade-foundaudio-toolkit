@@ -34,22 +34,29 @@ def get_audio_list(
         "Search term to filter by title or description. Leave empty to get all audio files.",
     ] = None,
     genre: Annotated[Optional[str], "Genre to filter by"] = None,
+    username: Annotated[
+        Optional[str],
+        "Username to filter audio files by specific user. If provided, only returns audio files from this user.",
+    ] = None,
 ) -> Dict[str, Any]:
     """Get a list of audio files from the Found Audio database.
 
-    This tool retrieves audio files with optional filtering by search term or genre.
+    This tool retrieves audio files with optional filtering by search term, genre, or username.
+    When a username is provided, it first looks up the user ID from the profiles table,
+    then filters audio files to only show those belonging to that user.
     It returns basic audio file information including title, description, duration, and metadata.
 
     Args:
         limit: Number of audio files to return (default: 20, max: 100)
         search: Optional search term to filter by title or description
         genre: Optional genre to filter by
+        username: Optional username to filter audio files by specific user
 
     Returns:
         A dictionary containing the audio files list and metadata
 
     Raises:
-        RetryableToolError: If there's a recoverable error (e.g., invalid parameters)
+        RetryableToolError: If there's a recoverable error (e.g., invalid parameters, username not found)
         ToolExecutionError: If there's an unrecoverable error (e.g., missing configuration)
     """
     # Validate limit parameter - use RetryableToolError for parameter validation
@@ -57,6 +64,13 @@ def get_audio_list(
         raise RetryableToolError(
             "Invalid limit parameter. Please provide a limit between 1 and 100.",
             additional_prompt_content="The limit parameter must be between 1 and 100. Please adjust your request.",
+        )
+
+    # Validate username parameter if provided
+    if username is not None and (not username.strip()):
+        raise RetryableToolError(
+            "Invalid username parameter. Username cannot be empty.",
+            additional_prompt_content="Please provide a valid username or leave it empty to search all users.",
         )
 
     try:
@@ -72,11 +86,48 @@ def get_audio_list(
         # Create Supabase client
         supabase = create_client(supabase_url, supabase_key)
 
+        # Look up user ID if username is provided
+        user_id = None
+        if username and username.strip():
+            try:
+                # Query the profiles table to get user ID by username
+                # Using the exact API pattern from the user's example
+                # Select all fields to match the actual response structure
+                profile_response = (
+                    supabase.from_("profiles")
+                    .select("id, username, email, created_at")
+                    .eq("username", username.strip())
+                    .execute()
+                )
+
+                if not profile_response.data or len(profile_response.data) == 0:
+                    raise RetryableToolError(
+                        f"Username '{username}' not found. Please check the username and try again.",
+                        additional_prompt_content=f"The username '{username}' does not exist in the system. Please verify the username is correct.",
+                    )
+
+                # Extract user ID from the first (and should be only) result
+                # The response structure is: [{"id": "uuid", "username": "discodude", "email": "...", "created_at": "..."}]
+                user_id = profile_response.data[0]["id"]
+
+            except RetryableToolError:
+                # Re-raise RetryableToolError as-is (username not found)
+                raise
+            except Exception as e:
+                # For unexpected errors during username lookup, raise ToolExecutionError
+                raise ToolExecutionError(
+                    f"Error looking up username '{username}': {str(e)}"
+                ) from e
+
         # Build query - select fields that actually exist in the API response
         select_fields = (
             "id, title, description, duration, genres, user_id, created_at, updated_at"
         )
         query = supabase.from_("audio_files").select(select_fields)
+
+        # Apply user ID filter if username was provided and found
+        if user_id:
+            query = query.eq("user_id", user_id)
 
         # Apply search filter
         if search and search.strip():
@@ -99,6 +150,7 @@ def get_audio_list(
                 "limit": limit,
                 "search": search,
                 "genre": genre,
+                "username": username,
             }
 
         # Convert the raw data to dictionaries
@@ -127,6 +179,7 @@ def get_audio_list(
             "limit": limit,
             "search": search,
             "genre": genre,
+            "username": username,
         }
 
     except RetryableToolError:

@@ -430,3 +430,373 @@ def test_get_audio_list_url_generation():
                 raise AssertionError(
                     f"Expected URL to contain ID '{expected_id}', got '{url_id}'"
                 )
+
+
+# =============================================================================
+# USERNAME-BASED SEARCH TESTS
+# These tests verify the new username-based filtering functionality
+# =============================================================================
+
+
+def test_get_audio_list_with_username():
+    """NORMAL OPERATION: Test functionality with username parameter.
+
+    This test verifies that the tool correctly looks up a user ID from the profiles table
+    and filters audio files to only show those belonging to that specific user.
+    """
+    with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv, patch(
+        "foundaudio.tools.get_audio_list.create_client"
+    ) as mock_create_client:
+
+        # SETUP: Mock environment variables for Supabase configuration
+        mock_getenv.side_effect = lambda key, default=None: {
+            "SUPABASE_URL": "https://test.supabase.co"
+        }.get(key, default)
+
+        # SETUP: Mock ToolContext with valid secret
+        mock_context = Mock(spec=ToolContext)
+        mock_context.get_secret.return_value = "test-secret-key"
+
+        # SETUP: Mock Supabase client
+        mock_client = mock_create_client.return_value
+
+        # SETUP: Mock profile lookup response (first query to profiles table)
+        # Using the actual response structure from the API
+        mock_profile_response = Mock()
+        mock_profile_response.data = [
+            {
+                "id": "user123",
+                "username": "discodude",
+                "email": "discodude889+1@gmail.com",
+                "created_at": "2024-12-02T06:47:48.71477+00:00",
+            }
+        ]
+
+        # SETUP: Mock audio files response (second query to audio_files table)
+        mock_audio_response = Mock()
+        mock_audio_response.data = [
+            {
+                "id": "audio123",
+                "title": "User's Track",
+                "description": "A track by the specific user",
+                "duration": 200.0,
+                "genres": ["electronic"],
+                "user_id": "user123",
+                "created_at": "2024-01-01T00:00:00Z",
+                "updated_at": "2024-01-01T00:00:00Z",
+            }
+        ]
+
+        # SETUP: Mock the Supabase query chains
+        # First query: profiles table lookup
+        profile_query_mock = Mock()
+        profile_query_mock.eq.return_value.execute.return_value = mock_profile_response
+
+        # Second query: audio_files table with user filter
+        audio_query_mock = Mock()
+        audio_query_mock.eq.return_value.order.return_value.limit.return_value.execute.return_value = (
+            mock_audio_response
+        )
+
+        # SETUP: Configure the client to return different query mocks for different tables
+        def mock_from_side_effect(table_name):
+            if table_name == "profiles":
+                mock_table = Mock()
+                mock_table.select.return_value = profile_query_mock
+                return mock_table
+            elif table_name == "audio_files":
+                mock_table = Mock()
+                mock_table.select.return_value = audio_query_mock
+                return mock_table
+            return Mock()
+
+        mock_client.from_.side_effect = mock_from_side_effect
+
+        # EXECUTE: Call the function under test with username
+        result = get_audio_list(mock_context, username="discodude")
+
+        # VERIFY: Check that result has correct structure and user-specific data
+        if not isinstance(result, dict):
+            raise AssertionError(f"Expected result to be dict, got {type(result)}")
+        if "audio_files" not in result:
+            raise AssertionError("Expected 'audio_files' key in result")
+
+        # Verify audio_files is a list with expected count
+        if not isinstance(result["audio_files"], list):
+            raise AssertionError(
+                f"Expected audio_files to be list, got {type(result['audio_files'])}"
+            )
+        if len(result["audio_files"]) != 1:
+            raise AssertionError(
+                f"Expected 1 audio file, got {len(result['audio_files'])}"
+            )
+
+        # Verify individual audio file structure and content
+        if not isinstance(result["audio_files"][0], dict):
+            raise AssertionError(
+                f"Expected audio file to be dict, got {type(result['audio_files'][0])}"
+            )
+        if result["audio_files"][0]["title"] != "User's Track":
+            raise AssertionError(
+                f"Expected title 'User's Track', got {result['audio_files'][0]['title']}"
+            )
+        if result["audio_files"][0]["user_id"] != "user123":
+            raise AssertionError(
+                f"Expected user_id 'user123', got {result['audio_files'][0]['user_id']}"
+            )
+
+        # Verify metadata fields include username
+        if result["count"] != 1:
+            raise AssertionError(f"Expected count 1, got {result['count']}")
+        if result["username"] != "discodude":
+            raise AssertionError(
+                f"Expected username 'discodude', got {result['username']}"
+            )
+
+        # VERIFY: Check that the correct query methods were called with expected parameters
+        profile_query_mock.eq.assert_called_once_with("username", "discodude")
+        audio_query_mock.eq.assert_called_once_with("user_id", "user123")
+
+
+def test_get_audio_list_username_not_found():
+    """INPUT VALIDATION: Test error handling when username is not found.
+
+    This test verifies that the tool properly handles the case where a username
+    does not exist in the profiles table and raises RetryableToolError.
+    """
+    with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv, patch(
+        "foundaudio.tools.get_audio_list.create_client"
+    ) as mock_create_client:
+
+        # SETUP: Mock environment variables for Supabase configuration
+        mock_getenv.side_effect = lambda key, default=None: {
+            "SUPABASE_URL": "https://test.supabase.co"
+        }.get(key, default)
+
+        # SETUP: Mock ToolContext with valid secret
+        mock_context = Mock(spec=ToolContext)
+        mock_context.get_secret.return_value = "test-secret-key"
+
+        # SETUP: Mock Supabase client with empty profile response (username not found)
+        mock_client = mock_create_client.return_value
+        mock_profile_response = Mock()
+        mock_profile_response.data = []  # Empty response - username not found
+
+        # SETUP: Mock the profiles query chain
+        profile_query_mock = Mock()
+        profile_query_mock.eq.return_value.execute.return_value = mock_profile_response
+
+        # SETUP: Configure the client to return profile query mock
+        mock_table = Mock()
+        mock_table.select.return_value = profile_query_mock
+        mock_client.from_.return_value = mock_table
+
+        # TEST: Verify that non-existent username raises RetryableToolError
+        with pytest.raises(
+            RetryableToolError, match="Username 'nonexistent' not found"
+        ):
+            get_audio_list(mock_context, username="nonexistent")
+
+
+def test_get_audio_list_username_with_other_filters():
+    """NORMAL OPERATION: Test username filtering combined with search and genre filters.
+
+    This test verifies that the tool correctly applies username filtering along with
+    search and genre filters, ensuring all filters work together properly.
+    """
+    with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv, patch(
+        "foundaudio.tools.get_audio_list.create_client"
+    ) as mock_create_client:
+
+        # SETUP: Mock environment variables for Supabase configuration
+        mock_getenv.side_effect = lambda key, default=None: {
+            "SUPABASE_URL": "https://test.supabase.co"
+        }.get(key, default)
+
+        # SETUP: Mock ToolContext with valid secret
+        mock_context = Mock(spec=ToolContext)
+        mock_context.get_secret.return_value = "test-secret-key"
+
+        # SETUP: Mock Supabase client
+        mock_client = mock_create_client.return_value
+
+        # SETUP: Mock profile lookup response
+        # Using the actual response structure from the API
+        mock_profile_response = Mock()
+        mock_profile_response.data = [
+            {
+                "id": "user456",
+                "username": "houseproducer",
+                "email": "houseproducer@example.com",
+                "created_at": "2024-12-01T10:30:00.00000+00:00",
+            }
+        ]
+
+        # SETUP: Mock audio files response with filtered results
+        mock_audio_response = Mock()
+        mock_audio_response.data = [
+            {
+                "id": "audio456",
+                "title": "House Music Track",
+                "description": "A house music track by the user",
+                "duration": 300.0,
+                "genres": ["house"],
+                "user_id": "user456",
+                "created_at": "2024-01-02T00:00:00Z",
+                "updated_at": "2024-01-02T00:00:00Z",
+            }
+        ]
+
+        # SETUP: Mock the Supabase query chains with complex filtering
+        profile_query_mock = Mock()
+        profile_query_mock.eq.return_value.execute.return_value = mock_profile_response
+
+        # Complex audio query chain: eq -> or_ -> contains -> order -> limit -> execute
+        audio_query_mock = Mock()
+        or_mock = Mock()
+        contains_mock = Mock()
+        order_mock = Mock()
+        limit_mock = Mock()
+
+        audio_query_mock.eq.return_value = or_mock
+        or_mock.or_.return_value = contains_mock
+        contains_mock.contains.return_value = order_mock
+        order_mock.order.return_value = limit_mock
+        limit_mock.limit.return_value = limit_mock
+        limit_mock.execute.return_value = mock_audio_response
+
+        # SETUP: Configure the client to return different query mocks for different tables
+        def mock_from_side_effect(table_name):
+            if table_name == "profiles":
+                mock_table = Mock()
+                mock_table.select.return_value = profile_query_mock
+                return mock_table
+            elif table_name == "audio_files":
+                mock_table = Mock()
+                mock_table.select.return_value = audio_query_mock
+                return mock_table
+            return Mock()
+
+        mock_client.from_.side_effect = mock_from_side_effect
+
+        # EXECUTE: Call the function with username, search, and genre filters
+        result = get_audio_list(
+            mock_context,
+            username="houseproducer",
+            search="house",
+            genre="house",
+            limit=5,
+        )
+
+        # VERIFY: Check that result has correct structure and filtered data
+        if not isinstance(result, dict) or "audio_files" not in result:
+            raise AssertionError("Expected result with audio_files key")
+
+        # Verify filtered results structure
+        if not isinstance(result["audio_files"], list):
+            raise AssertionError(
+                f"Expected audio_files to be list, got {type(result['audio_files'])}"
+            )
+        if len(result["audio_files"]) != 1:
+            raise AssertionError(
+                f"Expected 1 audio file, got {len(result['audio_files'])}"
+            )
+
+        # Verify individual audio file content matches all filters
+        audio_file = result["audio_files"][0]
+        if not isinstance(audio_file, dict):
+            raise AssertionError(
+                f"Expected audio file to be dict, got {type(audio_file)}"
+            )
+        if audio_file["title"] != "House Music Track":
+            raise AssertionError(
+                f"Expected title 'House Music Track', got {audio_file['title']}"
+            )
+        if audio_file["user_id"] != "user456":
+            raise AssertionError(
+                f"Expected user_id 'user456', got {audio_file['user_id']}"
+            )
+        if audio_file["genres"] != ["house"]:
+            raise AssertionError(
+                f"Expected genres ['house'], got {audio_file['genres']}"
+            )
+
+        # Verify metadata fields include all applied filters
+        if result["count"] != 1:
+            raise AssertionError(f"Expected count 1, got {result['count']}")
+        if result["username"] != "houseproducer":
+            raise AssertionError(
+                f"Expected username 'houseproducer', got {result['username']}"
+            )
+        if result["search"] != "house":
+            raise AssertionError(f"Expected search 'house', got {result['search']}")
+        if result["genre"] != "house":
+            raise AssertionError(f"Expected genre 'house', got {result['genre']}")
+        if result["limit"] != 5:
+            raise AssertionError(f"Expected limit 5, got {result['limit']}")
+
+        # VERIFY: Check that the correct query methods were called with expected parameters
+        profile_query_mock.eq.assert_called_once_with("username", "houseproducer")
+        audio_query_mock.eq.assert_called_once_with("user_id", "user456")
+        or_mock.or_.assert_called_once_with(
+            "title.ilike.%house%,description.ilike.%house%"
+        )
+        contains_mock.contains.assert_called_once_with("genres", ["house"])
+        order_mock.order.assert_called_once_with("created_at", desc=True)
+        limit_mock.limit.assert_called_once_with(5)
+
+
+def test_get_audio_list_empty_username():
+    """INPUT VALIDATION: Test validation of empty username parameter.
+
+    This test verifies that the tool properly validates empty username parameters
+    and raises RetryableToolError for empty or whitespace-only usernames.
+    """
+    # SETUP: Mock ToolContext for validation tests
+    mock_context = Mock(spec=ToolContext)
+    mock_context.get_secret.return_value = "test-secret-key"
+
+    # TEST: Verify empty username parameter validation
+    with pytest.raises(RetryableToolError, match="Invalid username parameter"):
+        get_audio_list(mock_context, username="")
+
+    # TEST: Verify whitespace-only username parameter validation
+    with pytest.raises(RetryableToolError, match="Invalid username parameter"):
+        get_audio_list(mock_context, username="   ")
+
+
+def test_get_audio_list_username_lookup_error():
+    """ERROR HANDLING: Test error handling during username lookup.
+
+    This test verifies that the tool properly handles unexpected errors
+    during the username lookup process and raises ToolExecutionError.
+    """
+    with patch("foundaudio.tools.get_audio_list.os.getenv") as mock_getenv, patch(
+        "foundaudio.tools.get_audio_list.create_client"
+    ) as mock_create_client:
+
+        # SETUP: Mock environment variables for Supabase configuration
+        mock_getenv.side_effect = lambda key, default=None: {
+            "SUPABASE_URL": "https://test.supabase.co"
+        }.get(key, default)
+
+        # SETUP: Mock ToolContext with valid secret
+        mock_context = Mock(spec=ToolContext)
+        mock_context.get_secret.return_value = "test-secret-key"
+
+        # SETUP: Mock Supabase client that raises an exception during profile lookup
+        mock_client = mock_create_client.return_value
+        mock_table = Mock()
+        mock_query = Mock()
+        mock_query.eq.return_value.execute.side_effect = Exception(
+            "Database connection error"
+        )
+        mock_table.select.return_value = mock_query
+        mock_client.from_.return_value = mock_table
+
+        # TEST: Verify that database errors during username lookup raise ToolExecutionError
+        with pytest.raises(
+            ToolExecutionError,
+            match="Error looking up username 'testuser': Database connection error",
+        ):
+            get_audio_list(mock_context, username="testuser")
