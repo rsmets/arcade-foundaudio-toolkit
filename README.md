@@ -314,22 +314,6 @@ trunk fmt
 make tests
 ```
 
-## Additional Resources
-
-### Arcade.dev Documentation
-
-- **[Getting Started](https://docs.arcade.dev/home/quickstart)** - Arcade basics
-- **[Building Tools](https://docs.arcade.dev/home/build-tools/create-a-toolkit)** - Tool development
-- **[Secret Management](https://docs.arcade.dev/home/build-tools/create-a-tool-with-secrets)** - Handling credentials
-- **[Testing Tools](https://docs.arcade.dev/home/evaluate-tools/why-evaluate-tools)** - Evaluation strategies
-- **[Deployment](https://docs.arcade.dev/home/serve-tools/arcade-deploy)** - Production deployment
-
-### Python Tools & Libraries
-
-- **[uv Documentation](https://docs.astral.sh/uv/)** - Modern Python packaging
-- **[pytest Documentation](https://docs.pytest.org/)** - Testing framework
-- **[Supabase Python Client](https://supabase.com/docs/reference/python)** - Database integration
-
 ## Production Deployment
 
 ### Manual Deployment
@@ -385,10 +369,22 @@ With the solid foundation established, future enhancements could include:
 - **Caching Layer** - To prevent having to call the external API all the time
 - **Monitoring** - Metrics, observability, alerting
 
+## Additional Resources
+
+### Arcade.dev Documentation
+
+- **[Getting Started](https://docs.arcade.dev/home/quickstart)** - Arcade basics
+- **[Building Tools](https://docs.arcade.dev/home/build-tools/create-a-toolkit)** - Tool development
+- **[Secret Management](https://docs.arcade.dev/home/build-tools/create-a-tool-with-secrets)** - Handling credentials
+- **[Testing Tools](https://docs.arcade.dev/home/evaluate-tools/why-evaluate-tools)** - Evaluation strategies
+- **[Deployment](https://docs.arcade.dev/home/serve-tools/arcade-deploy)** - Production deployment
+
+### Python Tools & Libraries
+
+- **[uv Documentation](https://docs.astral.sh/uv/)** - Modern Python packaging
+- **[pytest Documentation](https://docs.pytest.org/)** - Testing framework
+- **[Supabase Python Client](https://supabase.com/docs/reference/python)** - Database integration
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-```
-
-```
