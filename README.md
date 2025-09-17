@@ -11,7 +11,13 @@ This project demonstrates how I approach software development by building a [too
 3. **🔧 Tooling**: Modern Python tooling (uv, pytest, metalinting via [Trunk](https://docs.trunk.io/code-quality/overview) (more comprehensive than what the scaffolding provided), tests, evals, and deployments run via standard trunk-based development gitops workflows via CI/CD). Text editor commands and rules to assist with common workflows (Cursor commands and rules).
 4. **📚 Documentation**: Comprehensive Readme with verbose inline comments
 
+### Integration
+
 The [Found Audio](https://foundaudio.club) search API was chosen specifically for its simplicity - allowing focus on development practices rather than complex business logic. _Note: I created and operate Found Audio._
+
+#### Concession
+
+I really wanted to make a complex toolkit that would require OAuth to interface with a popular API that is currently not listed as a public [integration](https://docs.arcade.dev/toolkits), for example Uber's API, but given the time constraint I opted to keep the API integration aspect of this project as simple as possible. I emphasized spending my time showcasing professional development practices rather than more interesting business logic.
 
 ### Toolkit Design
 
@@ -37,15 +43,11 @@ This toolkit follows MCP design best practices [[1]](https://liquidmetal.ai/case
 
 #### Implementation in This Toolkit
 
-Our `get_audio_list` tool demonstrates these principles:
+Our [`get_audio_list`](./foundaudio/foundaudio/tools/get_audio_list.py) tool demonstrates these principles:
 
 - **Single Intent**: One call searches and filters audio files (potentially with multiple API calls within a single tool call)
 - **Intelligent Error Handling**: Clear validation messages with specific parameter guidance
 - **Structured Responses**: Clean data models that AI agents can easily work with
-
-### Concessions
-
-I really wanted to make a complex toolkit that would require OAuth to interface with a popular API that is currently not listed as a public [integration](https://docs.arcade.dev/toolkits), for example Uber's API, but given the time constraint I opted to keep the API integration aspect of this project as simple as possible. I emphasized spending my time showcasing professional development practices rather than more interesting business logic.
 
 ## 🛠️ Tools
 
