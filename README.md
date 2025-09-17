@@ -8,12 +8,12 @@ This project demonstrates how I approach software development by building a [too
 
 1. **🏗️ Foundation First**: Establish solid development practices before adding higher-level features/tools.
 2. **🧪 Test-Driven**: Comprehensive test coverage with proper mocking and validation
-3. **🔧 Tooling**: Modern Python tooling (uv, pytest, metalinting via [Trunk](https://docs.trunk.io/code-quality/overview) (more comprehensive than what the scaffolding provided), tests run via standard trunk-based development gitops workflows via CI/CD)
+3. **🔧 Tooling**: Modern Python tooling (uv, pytest, metalinting via [Trunk](https://docs.trunk.io/code-quality/overview) (more comprehensive than what the scaffolding provided), tests, evals, and deployments run via standard trunk-based development gitops workflows via CI/CD). Text editor commands and rules to assist with common workflows (Cursor commands and rules).
 4. **📚 Documentation**: Comprehensive Readme with verbose inline comments
 
 The [Found Audio](https://foundaudio.club) search API was chosen specifically for its simplicity - allowing focus on development practices rather than complex business logic. _Note: I created and operate Found Audio._
 
-### MCP Design
+### Toolkit Design
 
 This toolkit follows MCP design best practices[1](https://liquidmetal.ai/casesAndBlogs/mcp-api-wrapper-antipattern/)[2](https://vercel.com/blog/the-second-wave-of-mcp-building-for-llms-not-developers) that avoid common API wrapper antipatterns:
 
@@ -22,19 +22,15 @@ This toolkit follows MCP design best practices[1](https://liquidmetal.ai/casesAn
 1. **Design for Intent, Not API Mapping**
    - Focus on user workflows rather than individual API endpoints
    - Map what users actually want to accomplish with the service
-   - Example: "Search for audio files" rather than exposing raw database queries
+   - Handle complexity internally (name resolution or ambiguity)
+   - Example: "Search for audio files by Fidelio" makes multiple API calls but still only uses a single tool. Let's the LLM focus on the actual task instead of system integration
 
-2. **Build Intelligence into MCP Server**
-   - Handle complexity internally (name resolution, ambiguity, context conversion)
-   - Let the LLM focus on the actual task instead of system integration
-   - Example: Our tool handles genre filtering and search logic internally
-
-3. **Design Responses for Language Models**
+2. **Design Responses for Language Models**
    - Return structured, parseable information
    - Skip unnecessary data that clutters AI agent context
    - Focus on what the LLM needs to complete the task
 
-4. **Handle Errors Like a Helpful Colleague**
+3. **Handle Errors Like a Helpful Colleague**
    - Provide clear explanations of what went wrong
    - Suggest specific next steps for recovery
    - Use `RetryableToolError` for user-fixable issues with actionable guidance
@@ -43,14 +39,13 @@ This toolkit follows MCP design best practices[1](https://liquidmetal.ai/casesAn
 
 Our `get_audio_list` tool demonstrates these principles:
 
-- **Single Intent**: One call searches and filters audio files (vs. multiple API calls)
+- **Single Intent**: One call searches and filters audio files (potentially with multiple API calls within a single tool call)
 - **Intelligent Error Handling**: Clear validation messages with specific parameter guidance
 - **Structured Responses**: Clean data models that AI agents can easily work with
-- **Context-Aware**: Handles search, filtering, and pagination in one operation
 
 ### Concessions
 
-I really wanted to make a complex toolkit that would require OAuth to interface with a popular API that is currently not listed as a public [integration](https://docs.arcade.dev/toolkits), for example Uber's API, but given the time constraint I opted to keep the API integration aspect of this project as simple as possible. Given the fact that this is a professional role's technical assessment, I emphasized spending my time showcasing professional development practices rather than more interesting business logic.
+I really wanted to make a complex toolkit that would require OAuth to interface with a popular API that is currently not listed as a public [integration](https://docs.arcade.dev/toolkits), for example Uber's API, but given the time constraint I opted to keep the API integration aspect of this project as simple as possible. I emphasized spending my time showcasing professional development practices rather than more interesting business logic.
 
 ## 🛠️ Tools
 
@@ -70,6 +65,8 @@ I really wanted to make a complex toolkit that would require OAuth to interface 
 - **[Trunk](https://trunk.io/)** - [Metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce standards and best practices. It should just work thanks to the [Launcher](https://docs.trunk.io/code-quality/setup-and-installation/initialize-trunk#the-trunk-launcher) however, it might require a separate install (I was not able to verify; I have it globally on my machine)
 - **[GitHub Actions](https://docs.github.com/en/actions)** - Continuous integration
 - **[Zed](https://zed.dev/)** and **[Cursor](https://cursor.com/agents)** text editors were used with a variety of foundation models to assist in authoring this toolkit
+- Cursor rules and commands (once [released](https://cursor.com/changelog) Sept 11th)
+- Arcade documentation MCP server (and embeddings) created and hosted with [Ref](https://ref.tools/dashboard)
 
 ## 🏗️ File System Layout
 
@@ -102,7 +99,7 @@ foundaudio/
 ```bash
 # Clone the repository
 git clone https://github.com/rsmets/arcade-foundaudio-toolkit.git
-cd arcadeInterview/foundaudio
+cd foundaudio
 
 # Install dependencies
 make install
@@ -146,11 +143,21 @@ result = get_audio_list(limit=5)
 result = get_audio_list(search="pool", genre="House", limit=10)
 ```
 
-**Returns:** List of audio file dictionaries with metadata including:
+**Returns:** List of audio file dictionaries with metadata, for example:
 
-- ID, title, description
-- File path, duration, genres
-- User information and timestamps
+```json
+{
+  "created_at": "2025-08-31T04:16:21.395954+00:00",
+  "description": "Please ensure your subs are at the right woof levels. Strap yourself in and lets take some hot laps around some hard tracks 🏎️",
+  "duration": 2256.17,
+  "genres": ["HEATERS"],
+  "id": "f52d92b3-c590-4d80-a64a-89f972bb61c4",
+  "title": "Can It Get Much Harder Vol.6",
+  "updated_at": "2025-08-31T04:16:21.395954+00:00",
+  "url": "https://foundaudio.club/audio/f52d92b3-c590-4d80-a64a-89f972bb61c4",
+  "user_id": "1ffbf508-7d8a-43f0-8312-8a3a7176a919"
+}
+```
 
 ## 🔐 Secret Management
 
@@ -187,7 +194,7 @@ uv run pytest tests/test_get_audio_list.py::test_get_audio_list_basic -v
 1. **Unit Tests** - Individual function testing with mocking
 2. **Validation Tests** - Input parameter validation
 3. **Error Handling** - Exception and error case testing
-4. **Integration Tests** - Real API interaction tests _TODO: opted to keep the API mocked for simplicity_
+4. **Evaluations (~Integration Tests)** - Real API and LLM interaction tests
 
 ### Key Testing Patterns
 
@@ -371,6 +378,8 @@ This project exemplifies my approach to software development:
 
 - Modern tooling (uv instead of pip/poetry)
 - Trunk as a [metalinting](https://docs.trunk.io/code-quality/overview) configuration to enforce source code standards and best practices.
+- MCP Arcade documentation
+- Cursor commands and rules
 
 ### 4. **Production Readiness**
 
@@ -390,13 +399,10 @@ _It is unclear to me the best way to provide the information necessary for other
 
 With the solid foundation established, future enhancements could include:
 
-- **✅ Evaluations** - Comprehensive evaluation suite implemented with 20+ test cases covering all tool functionality
-- **Multi-tenancy** - User-specific data isolation (would require interfacing with an API in an authenticated state, ie with OAuth)
-- **More Tools** - Use more of the Found Audio api to do things like get profile/user info
+- **More Tools** - Use more of the Found Audio api to do things like leave comment or favorite (from authenticated state)
 - **User Auth** - Add tools that require Found Audio user authentication, eg post comments and like audio files
 - **Caching Layer** - To prevent having to call the external API all the time
-- **Monitoring** - Metrics and observability
-- **Enhanced Monitoring** - Add deployment success/failure notifications and monitoring dashboards
+- **Monitoring** - Metrics, observability, alerting
 
 ## 📄 License
 
